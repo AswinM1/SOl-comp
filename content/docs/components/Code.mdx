@@ -2,8 +2,13 @@
 title: Action
 description: A morphing button-to-form-to-status widget that walks through input, processing, and done states with shared-layout animations, built with Framer Motion.
 ---
+import Action from "@/components/Action"
 
 # Action
+<div className="max-w-3xl flex min-h-[400px] max-h-xl p-2 justify-center mx-0 items-center bg-neutral-900 rounded-md">
+<Action/>
+</div>
+
 
 A single interactive element that starts as a small pill button, expands into a code-entry form on click, then automatically cycles through a "Processing…" spinner and a "Done" checkmark state before collapsing back to its original button — all via one shared `layoutId` so the shape morphs smoothly between every stage.
 
