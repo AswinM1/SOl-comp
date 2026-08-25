@@ -4,13 +4,47 @@ description: Welcome to my component library
 ---
 
 # Introduction
-
-Welcome to my documentation.
-
-## Getting Started
-
-Install the package:
+SOl components is a part of Shadcn registry so it can be easily setup
 
 ```bash
 npm install my-components
 ```
+
+## Manual Installation
+
+If you prefer to set things up yourself, install the required peer dependencies:
+
+```bash
+npm install tailwindcss motion next
+```
+
+### Tailwind CSS
+
+Make sure Tailwind is configured in your project. If you haven't set it up yet:
+
+```bash
+npx tailwindcss init -p
+```
+
+Then add the component library's files to your `tailwind.config.js` content array:
+
+```js
+module.exports = {
+  content: [
+    "./node_modules/my-components/**/*.{js,ts,jsx,tsx}",
+    // ...your existing paths
+  ],
+}
+```
+
+### Motion
+
+This library uses [Motion](https://motion.dev) for animations. Install it if it isn't already part of your project:
+
+```bash
+npm install motion
+```
+
+### Next.js
+
+If you're using Next.js, no additional configuration is required — the components work out of the box with both the App Router and Pages Router.
