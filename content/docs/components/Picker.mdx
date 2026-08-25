@@ -1,0 +1,200 @@
+---
+title: Picker
+description: A scrollable, wheel-style item picker with 3D depth and blur effects, built with Framer Motion.
+---
+import Picker from "@/components/Picker"
+
+# Picker
+<Picker/>
+An iOS-style scroll wheel picker. Items curve away from the center with scale, opacity, blur, and a subtle 3D rotation, giving the illusion of a physical spinning wheel. Supports mouse wheel scrolling and click-to-select.
+
+## Features
+
+- **Infinite looping** — items wrap seamlessly in both directions using modulo indexing, so scrolling never hits an edge.
+- **3D wheel effect** — each item's `scale`, `opacity`, `blur`, and `rotateX` are derived from its distance to the center, creating a curved, physical feel.
+- **Spring animations** — powered by `motion/react` (`Framer Motion`) for smooth, natural transitions between positions.
+- **Wheel scroll support** — mouse/trackpad scroll moves the selection one step at a time, debounced to avoid overshooting on fast scrolls.
+- **Click to select** — clicking any visible item snaps it to the center.
+- **Highlighted center row** — a translucent overlay marks the active selection slot.
+
+## Installation
+
+This component depends on `motion` (the successor package to `framer-motion`) and Tailwind CSS for styling.
+
+```bash
+npm install motion
+```
+
+Make sure Tailwind CSS is configured in your project, then copy the component below into your codebase, e.g. `components/picker.tsx`.
+
+## Usage
+
+```tsx
+import Picker from "@/components/picker";
+
+export default function Page() {
+  return <Picker />;
+}
+```
+
+## Component
+
+```tsx
+"use client";
+
+import { useState, useRef } from "react";
+import { motion } from "motion/react";
+
+const items = [
+  "fight club", "seven", "wolf of wall street", "insidious", "green mile",
+];
+
+const ITEM_HEIGHT = 40;
+const VISIBLE = 3;
+
+const mod = (n: number, length: number) =>
+  ((n % length) + length) % length;
+
+export default function Picker() {
+  const [position, setPosition] = useState(0);
+
+  const indexes = [];
+
+  for (let i = position - VISIBLE; i <= position + VISIBLE; i++) {
+    indexes.push(i);
+  }
+
+  const wheelLock = useRef(false);
+
+  const changeSelected = (moveno: number) => {
+    setPosition((prev) => Math.round(prev + moveno));
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+
+    if (wheelLock.current) return;
+
+    wheelLock.current = true;
+
+    changeSelected(e.deltaY > 0 ? 1 : -1);
+
+    setTimeout(() => {
+      wheelLock.current = false;
+    }, 150);
+  };
+
+  return (
+    <div className="flex min-h-screen items-center justify-center ">
+      <div
+        className="relative h-[290px] w-[380px] overflow-hidden rounded-2xl
+                   border border-neutral-700 bg-[#171719]"
+      >
+        <div
+          className="pointer-events-none absolute left-3 right-3 top-1/2
+                     z-10 h-10 -translate-y-1/2 rounded-lg bg-white/5"
+        />
+
+        {indexes.map((virtualIndex) => {
+          const distance = virtualIndex - position;
+          const distanceFromCenter = Math.abs(distance);
+
+          const itemIndex = mod(virtualIndex, items.length);
+
+          return (
+            <motion.button
+              key={virtualIndex}
+              onClick={() => setPosition(virtualIndex)}
+              className="absolute left-0 flex w-full items-center justify-center text-xl font-medium text-neutral-400"
+              onWheel={handleWheel}
+              animate={{
+                top: `calc(50% - ${ITEM_HEIGHT / 2}px + ${
+                  distance * ITEM_HEIGHT
+                }px)`,
+
+                scale: Math.max(1 - distanceFromCenter * 0.1, 0.6),
+
+                opacity: Math.max(1 - distanceFromCenter * 0.25, 0.15),
+
+                rotateX: distance * -7,
+
+                filter: `blur(${Math.min(
+                  distanceFromCenter * 0.7,
+                  3
+                )}px)`,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+              }}
+              style={{
+                height: ITEM_HEIGHT,
+                transformOrigin: "center",
+              }}
+            >
+              <span
+                className={
+                  distance === 0 ? "font-semibold text-white" : ""
+                }
+              >
+                {items[itemIndex]}
+              </span>
+            </motion.button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+```
+
+## Props
+
+The component currently accepts **no props** — `items`, `ITEM_HEIGHT`, and `VISIBLE` are hardcoded module-level constants rather than component inputs. To make it reusable, you'd typically lift these into a props interface:
+
+```tsx
+interface PickerProps {
+  /** Items displayed in the wheel. */
+  items: string[];
+  /** Height of a single row, in pixels. Default: 40. */
+  itemHeight?: number;
+  /** Number of items rendered above/below the center on each side. Default: 3. */
+  visibleCount?: number;
+  /** Index of the item selected on mount. Default: 0. */
+  defaultIndex?: number;
+  /** Called with the selected item whenever the selection changes. */
+  onChange?: (value: string, index: number) => void;
+}
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `items` | `string[]` | *(required, currently hardcoded)* | The list of options rendered in the wheel. Looping wraps around this array using `mod()`. |
+| `itemHeight` | `number` | `40` | Row height in pixels. Also drives the vertical spacing between items and the translate offset in the `animate.top` calculation. |
+| `visibleCount` | `number` | `3` | How many extra items are rendered above and below the centered item. Controls how many rows are visible before they fade/blur out. |
+| `defaultIndex` | `number` | `0` | Initial selected index, i.e. the starting value of `position`. |
+| `onChange` | `(value: string, index: number) => void` | `undefined` | Fired when `position` changes, useful for syncing the selection to form state. |
+
+## Internal constants (current implementation)
+
+| Constant | Value | Purpose |
+|---|---|---|
+| `items` | `["fight club", "seven", "wolf of wall street", "insidious", "green mile"]` | The wheel's option list. |
+| `ITEM_HEIGHT` | `40` | Pixel height/spacing of each row. |
+| `VISIBLE` | `3` | Number of items rendered on each side of the center. |
+
+## How it works
+
+- **`position`** is a floating selection index (not clamped to `items.length`), which is what allows infinite scrolling in either direction.
+- **`indexes`** builds a small window of `2 * VISIBLE + 1` virtual indexes centered on `position`. Each virtual index is mapped back into the real `items` array with `mod()`, so the same item can render at multiple virtual positions as you scroll past it repeatedly.
+- **`distance`** (`virtualIndex - position`) drives every visual property — vertical offset, scale, opacity, blur, and `rotateX` — so items closer to center look sharper, larger, and more opaque.
+- **`handleWheel`** debounces scroll input with a `wheelLock` ref and a 150ms timeout, moving the selection by exactly one step per gesture regardless of scroll velocity.
+- **Click-to-select** calls `setPosition(virtualIndex)` directly, snapping the clicked item to the center via the spring transition.
+
+## Customization tips
+
+- Change **scroll sensitivity** by adjusting the `150` ms debounce in `handleWheel`, or by using `e.deltaY` magnitude instead of just its sign for variable-speed scrolling.
+- Change **wheel curvature** by tuning the multipliers in `scale`, `opacity`, and `rotateX` — larger multipliers create a tighter, more pronounced curve.
+- Change **spring feel** via the `transition` object's `stiffness` and `damping`.
+- Swap `items: string[]` for `items: { label: string; value: string }[]` if you need decoupled display/value pairs.

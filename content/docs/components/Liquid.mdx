@@ -1,0 +1,143 @@
+---
+title: Liquid
+description: A "liquid fill" text effect where a colored wave rises and falls behind the same text, built with Framer Motion.
+---
+import Liquid from "@/components/Liquid"
+
+# Liquid
+<Liquid/>
+
+Renders the same text twice, stacked — a static base layer and a colored layer clipped into a wavy shape that animates up and down — so the second layer reads as liquid filling and draining behind the letters, like a glass being poured.
+
+## Features
+
+- **Dual-layer text trick** — the same string is rendered twice in the same position: once as a flat base color, once clipped by an animated wave shape in a different color, creating the illusion of liquid rising through the letterforms.
+- **Animated wave fill level** — the clip shape cycles through three keyframes with different average heights (80% → 80% → 60%), so the "liquid" level visibly rises partway through the loop before the cycle repeats.
+- **Fully configurable** — text, both colors, font size, animation duration, and repeat count are all overridable via props.
+- **Infinite by default** — loops forever (`repeat: Infinity`) unless a finite `repeat` count is passed.
+- **No JS layout measurement required** — both layers rely purely on matching text content and `absolute inset-0` positioning to stay aligned, with no manual width/height syncing.
+
+## Installation
+
+This component depends on `motion` (the successor package to `framer-motion`) and Tailwind CSS for styling.
+
+```bash
+npm install motion
+```
+
+Make sure Tailwind CSS is configured in your project, then copy the component below into your codebase, e.g. `components/liquid.tsx`.
+
+## Usage
+
+```tsx
+import Liquid from "@/components/liquid";
+
+export default function Page() {
+  return <Liquid />;
+}
+```
+
+### Custom colors and text
+
+```tsx
+<Liquid
+  text="POUR"
+  textColor="text-neutral-800"
+  liquidColor="text-cyan-500"
+  fontSize="text-9xl"
+  duration={4}
+/>
+```
+
+### Playing the fill animation once
+
+```tsx
+<Liquid text="FILLED" repeat={0} />
+```
+
+## Component
+
+```tsx
+"use client";
+
+import { motion } from "motion/react";
+
+interface LiquidProps {
+  text?: string;
+  textColor?: string;
+  liquidColor?: string;
+  fontSize?: string;
+  duration?: number;
+  repeat?: number;
+}
+
+function Liquid({
+  text = "LiQuids",
+  textColor = "text-amber-400",
+  liquidColor = "text-blue-800",
+  fontSize = "text-8xl",
+  duration = 5,
+  repeat = Infinity,
+}: LiquidProps) {
+  return (
+    <div className="flex w-full justify-center">
+      <div className="relative w-fit">
+        {/* Base Text */}
+        <motion.div
+          className={`
+            w-fit
+            ${fontSize}
+            ${textColor}
+            font-sans
+            font-bold
+            tracking-tight
+          `}
+        >
+          {text}
+        </motion.div>
+
+        {/* Liquid Layer */}
+        <motion.div
+          animate={{
+            clipPath: [
+              "polygon(0 80%, 15% 55%, 30% 65%, 45% 55%, 60% 65%, 75% 55%, 100% 60%, 100% 100%, 0 100%)",
+              "polygon(0 80%, 15% 65%, 30% 55%, 45% 65%, 60% 55%, 75% 65%, 100% 55%, 100% 100%, 0 100%)",
+              "polygon(0 60%, 15% 55%, 30% 65%, 45% 55%, 60% 65%, 75% 55%, 100% 60%, 100% 100%, 0 100%)",
+            ],
+          }}
+          transition={{
+            duration,
+            repeat,
+            repeatType: "loop",
+          }}
+          className={`
+            absolute
+            inset-0
+            w-fit
+            ${fontSize}
+            ${liquidColor}
+            font-sans
+            font-bold
+            tracking-tight
+          `}
+        >
+          {text}
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+export default Liquid;
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `text` | `string` | `"LiQuids"` | Text rendered by both the base and liquid layers. Should be identical between the two for the effect to align. |
+| `textColor` | `string` | `"text-amber-400"` | Tailwind text color class for the static base layer. |
+| `liquidColor` | `string` | `"text-blue-800"` | Tailwind text color class for the animated, clipped liquid layer. |
+| `fontSize` | `string` | `"text-8xl"` | Tailwind font-size class applied to both layers — must match between them or the layers will misalign. |
+| `duration` | `number` | `5` | Seconds for one full loop through the three `clipPath` keyframes. |
+| `repeat` | `number` | `Infinity` | Number of times the animation repeats. Pass `0` for a single play-through, or a finite number for a fixed number of loops. |

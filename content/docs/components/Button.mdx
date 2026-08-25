@@ -1,0 +1,126 @@
+---
+title: Button
+description: A tactile, circular push-button with a layered inset/outset shadow that visually depresses on press.
+---
+
+import Button from "@/components/Button"
+
+# Button
+
+A round, physical-feeling button that sits over a square "socket" element. Custom layered box-shadows simulate a raised, glossy surface at rest and a pressed-in, concave surface on `:active`, combined with a `scale-90` press animation.
+
+<Button/>
+## Features
+
+- **Tactile press effect** — on `active`, the button both scales down (`active:scale-90`) and swaps to an inset shadow, mimicking a physically depressed button.
+- **Layered custom shadows** — the resting state combines an outer drop shadow with two inset highlight shadows for a glossy, raised look; the active state swaps to a single deep inset shadow for a concave, "pushed in" look.
+- **Smooth transitions** — `transition-all` animates the shadow and scale changes between resting and active states.
+- **Circular shape** — `rounded-full` on a square (`w-20 h-20`) element produces a perfect circle.
+- **Socket backdrop** — a separate square `div` with its own inset shadow sits behind/around the button, suggesting a recessed mount the button sits in.
+
+## Installation
+
+No extra packages required beyond Tailwind CSS, which must already be configured in your project.
+
+Copy the component below into your codebase, e.g. `components/button.tsx`.
+
+## Usage
+
+```tsx
+import Button from "@/components/button";
+
+export default function Page() {
+  return <Button />;
+}
+```
+
+## Component
+
+```tsx
+"use client"
+
+import React from "react"
+
+interface ButtonProps {
+  /** Click handler for the button. */
+  onClick?: () => void
+
+  /** Diameter of the button, in Tailwind size units. Default: 20 (5rem). */
+  size?: number
+
+  /** Background color class for the button face. */
+  color?: string
+
+  /** Disables press interaction and dims the button. */
+  disabled?: boolean
+
+  /** Optional label or icon rendered inside the button. */
+  children?: React.ReactNode
+}
+
+function Button({
+  onClick,
+  size = 90,
+  color = "bg-neutral-300",
+  disabled = false,
+  children,
+}: ButtonProps) {
+  return (
+    <div className="flex h-screen w-full items-center justify-center">
+      <div className=" h-36 w-36 rounded-md bg-neutral-500 flex justify-center items-center shadow-inner">
+        <button
+          onClick={onClick}
+          disabled={disabled}
+          style={{
+            width:size,
+            height:size,
+          }}
+          className={`
+           
+            
+            rounded-full
+            ${color}
+            shadow-[1px_2px_8px_rgba(0,0,0,0.45),inset_0_2px_0px_rgba(255,255,255,0.8)]
+            transition-transform
+            active:scale-90
+            active:shadow-[inset_0_1px_4px_4px_rgba(0,0,0,0.4)]
+            disabled:cursor-not-allowed
+            disabled:opacity-50
+          `}
+        >
+          {children}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export default Button
+```
+
+## Props
+
+
+```tsx
+interface ButtonProps {
+  /** Click handler for the button. */
+  onClick?: () => void;
+  /** Diameter of the button, in Tailwind size units. Default: 20 (5rem). */
+  size?: number;
+  /** Background color class for the button face. Default: "bg-neutral-300". */
+  color?: string;
+  /** Disables press interaction and dims the button when true. Default: false. */
+  disabled?: boolean;
+  /** Optional label or icon rendered inside the button. */
+  children?: React.ReactNode;
+}
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `onClick` | `() => void` | `undefined` | Handler fired when the button is clicked; currently the `<button>` has no `onClick` wired up. |
+| `size` | `number` | `20` | Controls both width and height (`w-{size} h-{size}`) so the circle scales uniformly. |
+| `color` | `string` | `"bg-neutral-300"` | Background color utility class applied to the button face. |
+| `disabled` | `boolean` | `false` | When `true`, should suppress the `active:` press styles and typically add `opacity-50 cursor-not-allowed`. |
+| `children` | `React.ReactNode` | `undefined` | Content rendered inside the button — currently the button is empty. |
+

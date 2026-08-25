@@ -1,0 +1,141 @@
+---
+title: Shimmer
+description: A per-letter shimmering text effect that cycles each character's color in a staggered wave, built with Framer Motion.
+---
+
+import Shimmer from "@/components/Shimmer"
+
+# Shimmer
+
+<Shimmer/>
+Animates a string of text one letter at a time, cycling each character's color through a wave that sweeps across the word — a common "shimmer" / "wave" text effect.
+
+## Features
+
+- **Per-letter animation** — the text is split into individual characters, each rendered as its own `motion.span` with its own animation timeline.
+- **Staggered wave effect** — every letter's animation is delayed by `idx * 0.4` seconds, so the color change ripples across the word left to right instead of firing all at once.
+- **Infinite loop** — each letter's color animation repeats forever (`repeat: Infinity`, `repeatType: "loop"`), so the shimmer continuously sweeps across the text.
+- **Color keyframes** — each letter animates through a `[dark, light, dark]` color sequence, creating the "highlight passing through" look.
+- **Zero external state** — the component is fully self-contained; there's no `useState` or `useEffect`, just declarative Framer Motion `animate` props.
+
+## Installation
+
+This component depends on `motion` (the successor package to `framer-motion`) and Tailwind CSS for styling.
+
+```bash
+npm install motion
+```
+
+Make sure Tailwind CSS is configured in your project, then copy the component below into your codebase, e.g. `components/shimmer.tsx`.
+
+## Usage
+
+```tsx
+import Shimmer from "@/components/shimmer";
+
+export default function Page() {
+  return <Shimmer />;
+}
+```
+
+## Component
+
+```tsx
+"use client"
+
+import React from "react"
+import { motion, easeOut } from "motion/react"
+
+interface ShimmerProps {
+  /** The text to animate. */
+  text: string
+
+  /** Base (resting) color of each letter. */
+  baseColor?: string
+
+  /** Highlight color the shimmer passes through. */
+  highlightColor?: string
+
+  /** Duration of one letter's full color cycle, in seconds. */
+  duration?: number
+
+  /** Delay between each letter's animation start, in seconds. */
+  stagger?: number
+
+  /** Additional classes applied to each letter span. */
+  className?: string
+}
+
+function Shimmer({
+  text,
+  baseColor = "#000000",
+  highlightColor = "#d4d4d4",
+  duration = 2,
+  stagger = 0.4,
+  className = "",
+}: ShimmerProps) {
+  return (
+    <div>
+      {text.split("").map((val, idx) => (
+        <motion.span
+          key={`${val}-${idx}`}
+          className={`
+            inline-block
+            font-sans
+            text-2xl
+            font-medium
+            ${className}
+          `}
+          animate={{
+            color: [
+              baseColor,
+              highlightColor,
+              baseColor,
+            ],
+          }}
+          transition={{
+            duration,
+            delay: idx * stagger,
+            repeat: Infinity,
+            repeatType: "loop",
+            ease: easeOut,
+          }}
+        >
+          {val === " " ? "\u00A0" : val}
+        </motion.span>
+      ))}
+    </div>
+  )
+}
+
+export default Shimmer
+```
+
+## Props
+
+```tsx
+interface ShimmerProps {
+  /** The text to animate. Default: "Hello". */
+  text: string;
+  /** Base (resting) color of each letter. Default: "#000000". */
+  baseColor?: string;
+  /** Highlight color the shimmer passes through. Default: "#d4d4d4". */
+  highlightColor?: string;
+  /** Duration of one letter's full color cycle, in seconds. Default: 2. */
+  duration?: number;
+  /** Delay between each letter's animation start, in seconds. Default: 0.4. */
+  stagger?: number;
+  /** Additional classes applied to each letter span. */
+  className?: string;
+}
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `text` | `string` | `"Hello"` | The string to render and animate, one letter at a time. |
+| `baseColor` | `string` | `"#000000"` | The resting color letters animate from/to. |
+| `highlightColor` | `string` | `"#d4d4d4"` | The lighter color each letter briefly passes through as the shimmer sweeps past. |
+| `duration` | `number` | `2` | How long, in seconds, a single letter's color cycle takes. |
+| `stagger` | `number` | `0.4` | The delay added per letter index, producing the left-to-right wave. |
+| `className` | `string` | `undefined` | Extra classes merged onto each `motion.span`, for font size, weight, tracking, etc. |
+

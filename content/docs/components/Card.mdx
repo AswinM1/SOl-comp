@@ -1,0 +1,194 @@
+---
+title: Card
+description: A rounded card with an animated, wave-like gradient background and glass-style glow, built with Framer Motion.
+---
+import Card from "@/components/Card"
+
+# Card
+
+<Card/>
+A square, glassy card whose background is an animated warm gradient clipped into a shifting wave shape, topped with a soft radial glow and a title block — evoking a desert dune or sunset scene.
+
+## Features
+
+- **Animated wave background** — `clipPath` is animated across three polygon keyframes, making the gradient's visible shape ripple like a dune line or wave, looping forever.
+- **Warm gradient fill** — a `red → orange → yellow` vertical gradient sits behind the animated clip, giving the wave a sunset/desert palette.
+- **Soft glow overlay** — a radial gradient positioned at the top-left adds a glassy highlight over the whole card.
+- **Layered content** — a label and title (`"Deserts"` / `"Sahara"`) sit in a `relative z-10` layer above the animated background and glow.
+- **Self-contained animation** — no external state; the wave is driven entirely by Framer Motion's `animate`/`transition` props.
+
+## Installation
+
+This component depends on `motion` (the successor package to `framer-motion`) and Tailwind CSS for styling.
+
+```bash
+npm install motion
+```
+
+Make sure Tailwind CSS is configured in your project, then copy the component below into your codebase, e.g. `components/card.tsx`.
+
+## Usage
+
+```tsx
+import Card from "@/components/card";
+
+export default function Page() {
+  return <Card />;
+}
+```
+
+## Component
+
+```tsx
+"use client"
+
+import { motion } from "motion/react"
+
+interface CardProps {
+  /** Small label above the title, e.g. category. */
+  label: string
+
+  /** Main title text. */
+  title: string
+
+  /** Tailwind gradient "from" color class. */
+  fromColor?: string
+
+  /** Tailwind gradient "via" color class. */
+  viaColor?: string
+
+  /** Tailwind gradient "to" color class. */
+  toColor?: string
+
+  /** Full wave animation cycle duration, in seconds. */
+  duration?: number
+
+  /** Card width/height in Tailwind size units. */
+  size?: number
+}
+
+function Card({
+  label,
+  title="Deserts",
+  fromColor = "from-red-600",
+  viaColor = "via-orange-400",
+  toColor = "to-yellow-600",
+  duration = 7,
+  size = 52,
+}: CardProps) {
+  return (
+    <div className="mx-auto mt-10 flex items-center justify-center">
+      <div
+        style={{
+          width: `${size * 0.25}rem`,
+          height: `${size * 0.25}rem`,
+        }}
+        className="
+          relative
+          overflow-hidden
+          rounded-[28px]
+          border
+          border-neutral-400
+          bg-neutral-300
+          shadow-2xl
+        "
+      >
+        {/* Animated wave */}
+        <motion.div
+          animate={{
+            clipPath: [
+              "polygon(0 50%, 35% 55%, 30% 65%, 45% 55%, 60% 65%, 75% 55%, 100% 60%, 100% 100%, 0 100%)",
+
+              "polygon(0 80%, 15% 65%, 30% 55%, 45% 65%, 60% 55%, 75% 65%, 100% 55%, 100% 100%, 0 100%)",
+
+              "polygon(0 80%, 15% 55%, 30% 65%, 45% 55%, 60% 65%, 75% 55%, 100% 60%, 100% 100%, 0 100%)",
+            ],
+          }}
+          transition={{
+            duration,
+            repeat: Infinity,
+          }}
+          className={`
+            absolute
+            inset-0
+            bg-linear-to-t
+            ${fromColor}
+            ${viaColor}
+            ${toColor}
+          `}
+        />
+
+        {/* Soft glow */}
+        <div
+          className="
+            absolute
+            inset-0
+            bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.4),transparent_45%)]
+          "
+        />
+
+        {/* Content */}
+        <div className="relative z-10 flex h-full flex-col justify-between p-6">
+          <div>
+            <p className="text-sm font-medium tracking-tight text-neutral-700">
+              {label}
+            </p>
+
+            <h1 className="mt-2 font-serif text-3xl leading-none tracking-tight text-neutral-700">
+              {title}
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Card
+```
+
+## Props
+
+```tsx
+interface CardProps {
+  /** Small label above the title, e.g. category. Default: "Deserts". */
+  label: string;
+  /** Main title text. Default: "Sahara". */
+  title: string;
+  /** Tailwind gradient "from" color class. Default: "from-red-600". */
+  fromColor?: string;
+  /** Tailwind gradient "via" color class. Default: "via-orange-400". */
+  viaColor?: string;
+  /** Tailwind gradient "to" color class. Default: "to-yellow-600". */
+  toColor?: string;
+  /** Full wave animation cycle duration, in seconds. Default: 7. */
+  duration?: number;
+  /** Card width/height in Tailwind size units. Default: 52 (13rem). */
+  size?: number;
+}
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | `"Deserts"` | Small caption text shown above the title. |
+| `title` | `string` | `"Sahara"` | Large serif heading text. |
+| `fromColor` | `string` | `"from-red-600"` | Gradient start color (bottom, since the gradient direction is `to-t`). |
+| `viaColor` | `string` | `"via-orange-400"` | Gradient midpoint color. |
+| `toColor` | `string` | `"to-yellow-600"` | Gradient end color (top). |
+| `duration` | `number` | `7` | Seconds for one full loop through the three `clipPath` keyframes. |
+| `size` | `number` | `52` | Card width and height, in Tailwind spacing units (`w-52 h-52` = 13rem / 208px). |
+
+## How it works
+
+- **`clipPath` keyframes** each define a `polygon()` with points that dip and rise across the bottom ~50% of the card, forming a jagged wave line; the bottom two points (`100% 100%` and `0 100%`) anchor the shape to the card's base so the gradient always fills from the wave line downward.
+- Animating between **three different polygons** (rather than two) lets Framer Motion interpolate a smooth, non-repetitive-looking ripple, since the middle keyframe differs enough from both ends to avoid a simple back-and-forth feel.
+- **`repeat: Infinity`** with no `repeatType` defaults to Framer Motion's `"loop"` behavior, replaying the three keyframes in sequence forever.
+- The gradient itself (`bg-gradient-to-t from-red-600 via-orange-400 to-yellow-600`) is static — only the **clip shape** animates, not the colors, which keeps the animation cheap (no repaint of gradient stops, just a changing clip region).
+- The **radial glow** div and the **content** div are separate, non-animated layers stacked via `absolute`/`relative` positioning and `z-10`, so they stay crisp and legible regardless of what the wave is doing underneath.
+
+## Customization tips
+
+- To vary the **wave intensity**, adjust how far apart the y-values (`50%`, `55%`, `65%`, `80%`, etc.) are across keyframes — larger spreads produce a choppier, more dramatic wave.
+- To support **any color scheme**, swap the Tailwind gradient utility classes for an inline `style` gradient driven by props, since Tailwind's JIT can't safely interpolate arbitrary class names at runtime.
+- To make the **wave feel less mechanical**, replace the linear "loop" with `repeatType: "mirror"` so it eases back through the same keyframes instead of snapping to the start.
+- Consider adding `prefers-reduced-motion` handling (e.g. via `useReducedMotion()` from `motion/react`) to freeze the wave for users who've opted out of animation.

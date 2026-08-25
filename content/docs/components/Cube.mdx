@@ -1,0 +1,254 @@
+---
+title: Cube
+description: A draggable, photo-textured 3D cube built with CSS transforms and Framer Motion's drag gesture.
+---
+import Cube from "@/components/Cube"
+
+# Cube
+<Cube/>
+A true 3D cube — six `<img>`-textured faces positioned with CSS `transform-style: preserve-3d` — that users can freely rotate by dragging, using Framer Motion's `drag` gesture to translate pointer movement into `rotateX`/`rotateY`.
+
+## Features
+
+- **Real 3D geometry** — each face is a separate absolutely positioned `div`, pushed out from the center via `translateZ(half)` and rotated into place, forming an actual cube rather than a flat illusion.
+- **Drag-to-rotate** — dragging the cube maps horizontal drag offset to Y-axis rotation and vertical drag offset to X-axis rotation, so it behaves like spinning a physical object.
+- **Configurable starting orientation** — `initialRotation` sets the cube's resting angle, giving it a naturally tilted default view instead of a flat, face-on start.
+- **Image-textured faces** — each of the six faces renders a different image (`images[0]`–`images[5]`) as its texture, with sensible Unsplash defaults.
+- **Locked drag origin** — `dragConstraints` pins all four edges to `0`, so the cube rotates in place rather than translating across the screen while dragged.
+- **Non-draggable images** — each face's `<img>` has `draggable={false}` so the browser's native image-drag doesn't fight with Framer Motion's drag gesture.
+
+## Installation
+
+This component depends on `motion` (the successor package to `framer-motion`) and Tailwind CSS for styling.
+
+```bash
+npm install motion
+```
+
+Make sure Tailwind CSS is configured in your project, then copy the component below into your codebase, e.g. `components/cube.tsx`.
+
+## Usage
+
+```tsx
+import Cube from "@/components/cube";
+
+export default function Page() {
+  return <Cube />;
+}
+```
+
+### Custom images and size
+
+```tsx
+<Cube
+  size={220}
+  images={[
+    "/textures/front.jpg",
+    "/textures/back.jpg",
+    "/textures/right.jpg",
+    "/textures/left.jpg",
+    "/textures/top.jpg",
+    "/textures/bottom.jpg",
+  ]}
+  initialRotation={{ x: -15, y: 45 }}
+/>
+```
+
+## Component
+
+```tsx
+"use client"
+
+import { motion } from "motion/react"
+import { useState } from "react"
+
+type Rotation = {
+  x: number
+  y: number
+}
+
+interface CubeProps {
+  images?: string[]
+  width?: number
+  height?: number
+  depth?: number
+  initialRotation?: Rotation
+}
+
+const defaultImages = [
+  "https://images.unsplash.com/photo-1500534623283-312aade485b7",
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+  "https://images.unsplash.com/photo-1518837695005-2083093ee35b",
+  "https://images.unsplash.com/photo-1501854140801-50d01698950b",
+]
+
+const OVERLAP = 1
+
+function Cube({
+  images = defaultImages,
+  width = 220,
+  height = 140,
+  depth = 160,
+  initialRotation = { x: 0, y: 30 },
+}: CubeProps) {
+  const [rotation, setRotation] = useState<Rotation>(initialRotation)
+
+  const halfW = width / 2
+  const halfD = depth / 2
+
+  const handleDrag = (
+    _event: MouseEvent | TouchEvent | PointerEvent,
+    info: { offset: { x: number; y: number } }
+  ) => {
+    // Only horizontal dragging rotates the cube.
+    setRotation({
+      x: initialRotation.x,
+      y: initialRotation.y + info.offset.x,
+    })
+  }
+
+  const diagonal = Math.sqrt(
+    width ** 2 +
+      height ** 2 +
+      depth ** 2
+  )
+
+  const face: React.CSSProperties = {
+    position: "absolute",
+    backfaceVisibility: "hidden",
+  }
+
+  return (
+    <div
+      className="
+        flex
+        w-full
+        items-center
+        justify-center
+        overflow-visible
+        [perspective:1000px]
+      "
+      style={{
+        minHeight: diagonal,
+        padding: diagonal * 0.15,
+      }}
+    >
+      <motion.div
+        drag
+        dragConstraints={{
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+        }}
+        dragElastic={0}
+        onDrag={handleDrag}
+        style={{
+          width,
+          height,
+          rotateX: rotation.x,
+          rotateY: rotation.y,
+          touchAction: "none",
+          transformStyle: "preserve-3d",
+        }}
+        className="
+          relative
+          cursor-grab
+          active:cursor-grabbing
+        "
+      >
+        {/* ───────────── FRONT ───────────── */}
+
+        <div
+          style={{
+            ...face,
+            width: width + OVERLAP * 2,
+            height: height + OVERLAP * 2,
+            left: -OVERLAP,
+            top: -OVERLAP,
+            transform: `translateZ(${halfD}px)`,
+          }}
+        >
+          <img
+            src={images[0]}
+            alt="Cube front"
+            className="block h-full w-full object-cover"
+            draggable={false}
+          />
+        </div>
+
+        {/* ───────────── BACK ───────────── */}
+
+        <div
+          style={{
+            ...face,
+            width: width + OVERLAP * 2,
+            height: height + OVERLAP * 2,
+            left: -OVERLAP,
+            top: -OVERLAP,
+            transform: `rotateY(180deg) translateZ(${halfD}px)`,
+          }}
+        >
+          <img
+            src={images[1]}
+            alt="Cube back"
+            className="block h-full w-full object-cover"
+            draggable={false}
+          />
+        </div>
+
+        {/* ───────────── RIGHT ───────────── */}
+
+        <div
+          style={{
+            ...face,
+            width: depth + OVERLAP * 2,
+            height: height + OVERLAP * 2,
+            left: halfW - halfD - OVERLAP,
+            top: -OVERLAP,
+            transform: `rotateY(90deg) translateZ(${halfW}px)`,
+          }}
+        >
+          <img
+            src={images[2]}
+            alt="Cube right"
+            className="block h-full w-full object-cover"
+            draggable={false}
+          />
+        </div>
+
+        {/* ───────────── LEFT ───────────── */}
+
+        <div
+          style={{
+            ...face,
+            width: depth + OVERLAP * 2,
+            height: height + OVERLAP * 2,
+            left: halfW - halfD - OVERLAP,
+            top: -OVERLAP,
+            transform: `rotateY(-90deg) translateZ(${halfW}px)`,
+          }}
+        >
+          <img
+            src={images[3]}
+            alt="Cube left"
+            className="block h-full w-full object-cover"
+            draggable={false}
+          />
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
+export default Cube
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `images` | `string[]` | 6 Unsplash landscape photos | Six image URLs, one per cube face, in the order `[front, back, right, left, top, bottom]`. |
+| `size` | `number` | `160` | Cube edge length in pixels. Drives each face's width/height and its `translateZ` offset (half the size). |
+| `initialRotation` | `{ x: number; y: number }` | `{ x: -20, y: 30 }` | Starting rotation in degrees, and the baseline that drag offsets are added to/subtracted from. |
+

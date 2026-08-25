@@ -1,0 +1,175 @@
+---
+title: Pendulum
+description: A spring-physics pendulum that swings in response to cursor movement across the whole page, built with Framer Motion.
+---
+import Pendulum from "@/components/Pendulum"
+
+# Pendulum
+<Pendulum/>
+
+A hanging rod-and-ball pendulum that tilts as the user moves their mouse anywhere on the page — faster or larger cursor movements swing it further, and a spring transition gives it a natural, slightly overshooting settle rather than snapping to each new angle.
+
+## Features
+
+- **Page-wide cursor tracking** — listens on `window`, not just the component itself, so the pendulum reacts to mouse movement anywhere on the page.
+- **Velocity-driven swing** — the angle changes based on how far the cursor moved between frames, not its absolute position, so quick flicks produce a bigger swing than slow movements.
+- **Spring settle** — `rotate` is animated through a Framer Motion spring (`stiffness`/`damping`), giving the pendulum a believable bounce-and-settle feel after each nudge.
+- **Clamped swing arc** — the angle is bounded to `±maxAngle`, so the pendulum swings within a realistic range instead of spinning indefinitely as the cursor moves back and forth over time.
+- **No jump on mount** — the first mouse-move event after mounting is used only to record a starting cursor position, avoiding a large initial swing that would otherwise fire from comparing against an uninitialized reference point.
+- **Reduced-motion aware** — when the user has requested reduced motion at the OS level, the pendulum skips attaching the mouse listener entirely and stays still.
+- **Configurable look and feel** — rod length, ball size, color, gradient, spring physics, sensitivity, and max swing angle are all overridable via props.
+
+## Installation
+
+This component depends on `motion` (the successor package to `framer-motion`) and Tailwind CSS for styling.
+
+```bash
+npm install motion
+```
+
+Make sure Tailwind CSS is configured in your project, then copy the component below into your codebase, e.g. `components/pendulum.tsx`.
+
+## Usage
+
+```tsx
+import Pendulum from "@/components/pendulum";
+
+export default function Page() {
+  return <Pendulum />;
+}
+```
+
+### Custom look and swing range
+
+```tsx
+<Pendulum
+  length={400}
+  ballSize={64}
+  sensitivity={0.05}
+  maxAngle={45}
+  color="bg-neutral-700"
+  ballGradient="bg-linear-to-r from-cyan-400 to-blue-700"
+  stiffness={140}
+  damping={8}
+/>
+```
+
+## Component
+
+```tsx
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+
+interface PendulumProps {
+  length?: number;
+  ballSize?: number;
+  sensitivity?: number;
+  color?: string;
+  ballGradient?: string;
+  stiffness?: number;
+  damping?: number;
+  maxAngle?: number;
+}
+
+function Pendulum({
+  length = 300,
+  ballSize = 48,
+  sensitivity = 0.03,
+  color = "bg-red-800",
+  ballGradient = "bg-linear-to-r from-yellow-500 to-pink-700",
+  stiffness = 100,
+  damping = 10,
+  maxAngle = 60,
+}: PendulumProps) {
+  const [angle, setAngle] = useState<number>(0);
+  const previousX = useRef<number | null>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    // Respect the user's reduced-motion preference by not
+    // tracking the cursor at all.
+    if (prefersReducedMotion) return;
+
+    const handleMouseMove = (event: MouseEvent): void => {
+      const currentX = event.clientX;
+
+      // On the very first move we only have a "current" position and
+      // no prior one to diff against — record it and bail out instead
+      // of computing a movement against the ref's 0 default, which
+      // used to cause a large jump on mount.
+      if (previousX.current === null) {
+        previousX.current = currentX;
+        return;
+      }
+
+      const movement = previousX.current - currentX;
+      previousX.current = currentX;
+
+      setAngle((previous) => {
+        const next = previous + movement * sensitivity;
+        // Clamp so the pendulum swings within a believable arc
+        // instead of accumulating unbounded rotation over time.
+        return Math.max(-maxAngle, Math.min(maxAngle, next));
+      });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [sensitivity, maxAngle, prefersReducedMotion]);
+
+  return (
+    <div className="flex justify-center">
+      <motion.div
+        className={`relative mt-10 w-[2px] origin-top ${color}`}
+        style={{
+          height: length,
+        }}
+        animate={{
+          rotate: angle,
+        }}
+        transition={{
+          type: "spring",
+          stiffness,
+          damping,
+        }}
+      >
+        <div
+          className={`
+            absolute
+            bottom-0
+            left-1/2
+            -translate-x-1/2
+            rounded-full
+            ${ballGradient}
+          `}
+          style={{
+            width: ballSize,
+            height: ballSize,
+          }}
+        />
+      </motion.div>
+    </div>
+  );
+}
+
+export default Pendulum;
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `length` | `number` | `300` | Length of the rod, in pixels (`height` of the pivoting element). |
+| `ballSize` | `number` | `48` | Diameter of the ball at the rod's end, in pixels. |
+| `sensitivity` | `number` | `0.03` | Multiplier applied to raw pixel mouse movement before it's added to the angle — higher values make the pendulum more reactive to small cursor motions. |
+| `color` | `string` | `"bg-red-800"` | Tailwind background color class for the rod. |
+| `ballGradient` | `string` | `"bg-linear-to-r from-yellow-500 to-pink-700"` | Tailwind gradient class(es) for the ball. |
+| `stiffness` | `number` | `100` | Spring stiffness for the `rotate` transition — higher values settle faster and more sharply. |
+| `damping` | `number` | `10` | Spring damping for the `rotate` transition — lower values allow more oscillation/overshoot before settling. |
+| `maxAngle` | `number` | `60` | Maximum swing angle, in degrees, in either direction from vertical. |
+

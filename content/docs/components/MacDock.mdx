@@ -1,0 +1,231 @@
+---
+title: MacDock
+description: A macOS-style dock where items magnify as the cursor approaches, built with Framer Motion motion values.
+---
+import MacDock from "@/components/Macdock"
+
+# MacDock
+
+<MacDock/>
+A row of pill-shaped icons that grow smoothly as the cursor moves closer to them and shrink back as it moves away — the classic macOS Dock magnification effect — driven by continuous `MotionValue` transforms rather than per-item React state.
+
+## Features
+
+- **Distance-based magnification** — each item's size is derived from its live pixel distance to the cursor, so the closest item is largest and items further away taper back to their resting size.
+- **Smooth spring sizing** — the raw distance-to-size mapping is passed through `useSpring`, so items grow/shrink with natural, slightly bouncy motion instead of snapping.
+- **Single shared cursor value** — one `mouseX` motion value lives in the parent and is passed down to every `DockItem`, avoiding a re-render of the whole dock on every mouse move.
+- **Configurable geometry** — item count, resting size, magnified size, and gap are all controlled via props.
+- **Graceful reset on mouse leave** — moving the cursor away from the dock sends `mouseX` far off-screen, so every item smoothly relaxes back to its resting size.
+- **Layered inset/outset shadows** — both the dock container and each item use a combined inset + drop shadow for a glassy, tactile look.
+
+## Installation
+
+This component depends on `motion` (the successor package to `framer-motion`) and Tailwind CSS for styling.
+
+```bash
+npm install motion
+```
+
+Make sure Tailwind CSS is configured in your project, then copy the component below into your codebase, e.g. `components/mac-dock.tsx`.
+
+## Usage
+
+```tsx
+import MacDock from "@/components/mac-dock";
+
+export default function Page() {
+  return (
+    <MacDock
+      items={["Finder", "Mail", "Safari", "Music", "Notes"]}
+      itemSize={48}
+      magnifiedSize={84}
+      gap={12}
+    />
+  );
+}
+```
+
+## Component
+
+```tsx
+"use client";
+
+import { useRef } from "react";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  type MotionValue,
+} from "motion/react";
+
+interface MacDockProps {
+  items?: string[];
+  itemSize?: number;
+  magnifiedSize?: number;
+  gap?: number;
+}
+
+interface DockItemProps {
+  label: string;
+  index: number;
+  mouseX: MotionValue<number>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  itemSize: number;
+  magnifiedSize: number;
+}
+
+function DockItem({
+  label,
+  index,
+  mouseX,
+  containerRef,
+  itemSize,
+  magnifiedSize,
+}: DockItemProps) {
+  const distance = useTransform(mouseX, (value: number) => {
+    const element = containerRef.current?.children[index];
+    const bounds = element?.getBoundingClientRect();
+
+    if (!bounds) return 0;
+
+    return value - bounds.left - bounds.width / 2;
+  });
+
+  const size = useTransform(
+    distance,
+    [-150, 0, 150],
+    [itemSize, magnifiedSize, itemSize]
+  );
+
+  const width = useSpring(size, {
+    mass: 0.1,
+    stiffness: 150,
+    damping: 12,
+  });
+
+  const height = useSpring(size, {
+    mass: 0.1,
+    stiffness: 150,
+    damping: 12,
+  });
+
+  return (
+    <motion.div
+      style={{
+        width,
+        height,
+        background:
+          "linear-gradient(to bottom, rgba(29, 208, 253, 1) 50%, rgba(25, 25, 255, 1) 100%)",
+      }}
+      className="
+        flex
+        items-center
+        justify-center
+        rounded-full
+        text-white
+        [box-shadow:inset_0_2px_4px_rgba(0,0,0,0.4),0_2px_5px_rgba(255,255,255,0.2)]
+      "
+    >
+      {label}
+    </motion.div>
+  );
+}
+
+function MacDock({
+  items = ["Hello"],
+  itemSize = 50,
+  magnifiedSize = 80,
+  gap = 16,
+}: MacDockProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue<number>(-1000);
+
+  const handleMouseMove = (
+    event: React.MouseEvent<HTMLDivElement>
+  ): void => {
+    mouseX.set(event.clientX);
+  };
+
+  const handleMouseLeave = (): void => {
+    mouseX.set(-10000);
+  };
+
+  return (
+    <div className="mt-10 flex w-full items-center justify-center">
+      <div
+        ref={containerRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          gap,
+        }}
+        className="
+          flex
+          items-end
+          rounded-3xl
+          bg-neutral-300
+          px-6
+          py-4
+          [box-shadow:inset_0_2px_4px_rgba(0,0,0,0.4),0_2px_5px_rgba(255,255,255,0.2)]
+        "
+      >
+        {items.map((item, index) => (
+          <DockItem
+            key={`${item}-${index}`}
+            label={item}
+            index={index}
+            mouseX={mouseX}
+            containerRef={containerRef}
+            itemSize={itemSize}
+            magnifiedSize={magnifiedSize}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default MacDock;
+```
+
+## Props
+
+### `MacDock`
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `items` | `string[]` | `["Hello"]` | Labels rendered as dock items, left to right. |
+| `itemSize` | `number` | `50` | Resting size (width & height, in px) of each item when the cursor is far away. |
+| `magnifiedSize` | `number` | `80` | Maximum size (in px) an item reaches when the cursor is directly over its center. |
+| `gap` | `number` | `16` | Horizontal spacing (in px) between items, applied via the container's `gap` style. |
+
+### `DockItem` (internal)
+
+`DockItem` isn't exported on its own — it's rendered by `MacDock` for each entry in `items` — but understanding its props clarifies how the magnification is wired up.
+
+| Prop | Type | Description |
+|---|---|---|
+| `label` | `string` | Text rendered inside the item. |
+| `index` | `number` | The item's position in the dock, used to look up its own DOM node via `containerRef.current.children[index]`. |
+| `mouseX` | `MotionValue<number>` | The shared cursor X position, read (not subscribed to via React state) to compute distance. |
+| `containerRef` | `React.RefObject<HTMLDivElement \| null>` | Ref to the dock's container, used to measure each item's live bounding box. |
+| `itemSize` | `number` | Passed through from `MacDock`; the item's resting size. |
+| `magnifiedSize` | `number` | Passed through from `MacDock`; the item's peak size. |
+
+## How it works
+
+- **`mouseX` is a single `MotionValue`, not React state.** `handleMouseMove` calls `mouseX.set(event.clientX)` directly, which updates any dependent transforms without triggering a React re-render of `MacDock` or its children — this is what keeps the magnification smooth even with many items.
+- **Each `DockItem` independently measures its own position.** Inside `useTransform(mouseX, ...)`, the callback looks up `containerRef.current.children[index]` and calls `getBoundingClientRect()` *at read time*, rather than once on mount — so the distance calculation stays correct even if the dock's layout shifts (e.g. as neighboring items grow/shrink).
+- **`distance` is remapped to `size` via a three-stop `useTransform`.** `[-150, 0, 150] → [itemSize, magnifiedSize, itemSize]` means an item is at its largest exactly under the cursor (`distance = 0`) and linearly shrinks back to resting size once the cursor is 150px away in either direction — items further than that stay clamped at `itemSize` since `useTransform` clamps by default outside the input range.
+- **`width` and `height` are each their own independent `useSpring`.** Although both start from the same `size` transform, Framer Motion creates two separate spring simulations — in practice they track each other closely since they share input and spring config, but this means two spring computations run per item instead of one shared value being applied to both dimensions.
+- **`handleMouseLeave` sets `mouseX` to `-10000`** rather than resetting to a "neutral" value — pushing it far outside every item's `[-150, 150]` distance window guarantees all items animate back to `itemSize` via the same spring used for magnification, so leaving the dock feels consistent with hovering within it.
+- **The initial `mouseX` value is `-1000`**, safely outside the influence range of any item, so the dock renders at resting size before the first mouse move rather than magnifying arbitrarily on mount.
+
+## Customization tips
+
+- To **support touch devices**, add a fallback that keeps all items at `itemSize` (touch has no continuous hover position to magnify against), or trigger a one-off magnify-on-tap animation instead.
+- To **widen or narrow the magnification falloff**, adjust the `[-150, 0, 150]` input range in the `size` transform — a smaller range makes the effect more localized/sudden, a larger one spreads the influence across more neighboring items.
+- To **change the bounce character**, tune `mass`/`stiffness`/`damping` in the `useSpring` calls — lower damping relative to stiffness increases overshoot/bounciness.
+- To **support icons instead of text labels**, change `items` to accept `{ label: string; icon: React.ReactNode }[]` and render `icon` inside `DockItem` in place of the raw label string.
+- Since `distance` reads `containerRef.current.children[index]` positionally, **avoid conditionally rendering items** (e.g. filtering `items` based on some other state) without also keying/reordering carefully, as the index-based DOM lookup assumes a stable 1:1 mapping between `items` and the container's child elements.

@@ -1,0 +1,248 @@
+---
+title: IDCard
+description: A 3D tilt ID/badge card that follows the cursor, with an animated "wind line" sweep effect on hover, built with Framer Motion.
+---
+import IDcard from "@/components/Id"
+
+# IDCard
+<IDcard/>
+
+A badge-style card that tilts in 3D toward the cursor as you move over it, and reveals a set of animated diagonal light streaks ("wind lines") sweeping across it while hovered — evoking a holographic or motion-sensitive ID card.
+
+## Features
+
+- **Cursor-following 3D tilt** — `rotateX`/`rotateY` are derived from mouse position relative to the card's center, smoothed through a spring for a natural, lagging tilt.
+- **Animated wind-line sweep** — four horizontal gradient lines sweep across the card and fade in/out in a staggered sequence, but only while hovered.
+- **Configurable identity fields** — name, role, description, ID number, country, and label are all overridable via props, with sensible defaults.
+- **Avatar with fallback** — renders an `<img>` when an `avatar` URL is provided, otherwise falls back to a single-letter initial badge (`avatarFallback`).
+- **Smooth spring-based motion** — both tilt axes and the wind lines use spring/eased transitions rather than instant snaps, for a polished feel.
+- **3D perspective container** — the wrapping div sets `perspective: 1000px` so the card's `rotateX`/`rotateY` transforms read as true 3D tilt rather than a flat skew.
+
+## Installation
+
+This component depends on `motion` (the successor package to `framer-motion`) and Tailwind CSS for styling.
+
+```bash
+npm install motion
+```
+
+Make sure Tailwind CSS is configured in your project, then copy the component below into your codebase, e.g. `components/idcard.tsx`.
+
+## Usage
+
+```tsx
+import IDCard from "@/components/idcard";
+
+export default function Page() {
+  return (
+    <IDCard
+      name="Priya Sharma"
+      role="Product Designer"
+      description="Designing accessible, delightful interfaces for the web and beyond."
+      id="004512"
+      country="INDIA"
+      avatar="/avatars/priya.jpg"
+      label="Team"
+    />
+  );
+}
+```
+
+### Using the fallback avatar
+
+```tsx
+<IDCard name="Aswin" avatarFallback="A" />
+```
+
+## Component
+
+```tsx
+"use client";
+import { useState } from "react";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "motion/react";
+
+interface IDCardProps {
+  name?: string;
+  role?: string;
+  description?: string;
+  id?: string;
+  country?: string;
+  avatar?: string;
+  avatarFallback?: string;
+  label?: string;
+}
+
+function IDCard({
+  name = "Aswin",
+  role = "Design Engineer",
+  description = "Building thoughtful interfaces and developer tools with React, TypeScript and AI.",
+  id = "001284",
+  country = "INDIA",
+  avatar,
+  avatarFallback = "A",
+  label = "Random",
+}: IDCardProps) {
+  const [hovered, setHovered] = useState<boolean>(false);
+
+  const mouseX = useMotionValue<number>(0);
+  const mouseY = useMotionValue<number>(0);
+
+  const rotateX = useSpring(
+    useTransform(mouseY, [-150, 150], [5, -5]),
+    {
+      stiffness: 200,
+      damping: 20,
+    }
+  );
+
+  const rotateY = useSpring(
+    useTransform(mouseX, [-150, 150], [-5, 5]),
+    {
+      stiffness: 200,
+      damping: 20,
+    }
+  );
+
+  const handleMouseMove = (
+    event: React.MouseEvent<HTMLDivElement>
+  ): void => {
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    mouseX.set(event.clientX - rect.left - rect.width / 2);
+    mouseY.set(event.clientY - rect.top - rect.height / 2);
+  };
+
+  const handleMouseLeave = (): void => {
+    mouseX.set(0);
+    mouseY.set(0);
+    setHovered(false);
+  };
+
+  return (
+    <div className="flex min-h-screen w-full items-center justify-center [perspective:1000px]">
+      <motion.div
+        onMouseEnter={() => setHovered(true)}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          rotateX,
+          rotateY,
+        }}
+        className="
+          relative
+          h-[240px]
+          w-[380px]
+          overflow-hidden
+          rounded-2xl
+          border border-white/10
+          bg-neutral-800
+          text-white
+        "
+      >
+        {/* Wind */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          {[0, 1, 2, 3].map((index: number) => (
+            <motion.div
+              key={index}
+              className="
+                absolute
+                h-px
+                w-90
+                bg-gradient-to-r
+                from-transparent
+                via-white
+                to-blue-700
+              "
+              style={{
+                top: `${10 * index + 30}%`,
+              }}
+              animate={
+                hovered
+                  ? {
+                      x: [0, 600],
+                      opacity: [0, 0.8, 0],
+                    }
+                  : {
+                      x: 0,
+                      opacity: 0,
+                    }
+              }
+              transition={{
+                duration: 1.2,
+                delay: index * 0.12,
+                repeat: hovered ? Infinity : 0,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 flex h-full flex-col justify-between p-6">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-3">
+              {avatar ? (
+                <img
+                  src={avatar}
+                  alt={name}
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+              ) : (
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black">
+                  {avatarFallback}
+                </div>
+              )}
+
+              <div>
+                <p className="text-sm font-medium">{name}</p>
+                <p className="text-xs text-neutral-500">{role}</p>
+              </div>
+            </div>
+
+            <span className="font-mono text-[10px] text-neutral-600">
+              {id}
+            </span>
+          </div>
+
+          <div>
+            <p className="max-w-[260px] text-sm leading-6 text-neutral-400">
+              {description}
+            </p>
+
+            <div className="mt-5 flex justify-between border-t border-white/10 pt-4">
+              <span className="text-[10px] uppercase tracking-widest text-neutral-600">
+                {label}
+              </span>
+
+              <span className="font-mono text-[10px] text-neutral-600">
+                {country}
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+export default IDCard;
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `name` | `string` | `"Aswin"` | Primary name displayed next to the avatar. |
+| `role` | `string` | `"Design Engineer"` | Subtitle shown beneath the name. |
+| `description` | `string` | `"Building thoughtful interfaces and developer tools with React, TypeScript and AI."` | Body text describing the person, wrapped to a max width of 260px. |
+| `id` | `string` | `"001284"` | Monospace identifier shown top-right, e.g. an employee or badge number. |
+| `country` | `string` | `"INDIA"` | Monospace text shown bottom-right of the footer row. |
+| `avatar` | `string` | `undefined` | Image URL for the avatar. When omitted, `avatarFallback` is rendered instead. |
+| `avatarFallback` | `string` | `"A"` | Text (typically a single initial) shown inside a circular badge when `avatar` isn't provided. |
+| `label` | `string` | `"Random"` | Small uppercase tag shown bottom-left of the footer row. |
+
