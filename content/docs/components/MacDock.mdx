@@ -215,19 +215,3 @@ export default MacDock;
 | `itemSize` | `number` | Passed through from `MacDock`; the item's resting size. |
 | `magnifiedSize` | `number` | Passed through from `MacDock`; the item's peak size. |
 
-## How it works
-
-- **`mouseX` is a single `MotionValue`, not React state.** `handleMouseMove` calls `mouseX.set(event.clientX)` directly, which updates any dependent transforms without triggering a React re-render of `MacDock` or its children — this is what keeps the magnification smooth even with many items.
-- **Each `DockItem` independently measures its own position.** Inside `useTransform(mouseX, ...)`, the callback looks up `containerRef.current.children[index]` and calls `getBoundingClientRect()` *at read time*, rather than once on mount — so the distance calculation stays correct even if the dock's layout shifts (e.g. as neighboring items grow/shrink).
-- **`distance` is remapped to `size` via a three-stop `useTransform`.** `[-150, 0, 150] → [itemSize, magnifiedSize, itemSize]` means an item is at its largest exactly under the cursor (`distance = 0`) and linearly shrinks back to resting size once the cursor is 150px away in either direction — items further than that stay clamped at `itemSize` since `useTransform` clamps by default outside the input range.
-- **`width` and `height` are each their own independent `useSpring`.** Although both start from the same `size` transform, Framer Motion creates two separate spring simulations — in practice they track each other closely since they share input and spring config, but this means two spring computations run per item instead of one shared value being applied to both dimensions.
-- **`handleMouseLeave` sets `mouseX` to `-10000`** rather than resetting to a "neutral" value — pushing it far outside every item's `[-150, 150]` distance window guarantees all items animate back to `itemSize` via the same spring used for magnification, so leaving the dock feels consistent with hovering within it.
-- **The initial `mouseX` value is `-1000`**, safely outside the influence range of any item, so the dock renders at resting size before the first mouse move rather than magnifying arbitrarily on mount.
-
-## Customization tips
-
-- To **support touch devices**, add a fallback that keeps all items at `itemSize` (touch has no continuous hover position to magnify against), or trigger a one-off magnify-on-tap animation instead.
-- To **widen or narrow the magnification falloff**, adjust the `[-150, 0, 150]` input range in the `size` transform — a smaller range makes the effect more localized/sudden, a larger one spreads the influence across more neighboring items.
-- To **change the bounce character**, tune `mass`/`stiffness`/`damping` in the `useSpring` calls — lower damping relative to stiffness increases overshoot/bounciness.
-- To **support icons instead of text labels**, change `items` to accept `{ label: string; icon: React.ReactNode }[]` and render `icon` inside `DockItem` in place of the raw label string.
-- Since `distance` reads `containerRef.current.children[index]` positionally, **avoid conditionally rendering items** (e.g. filtering `items` based on some other state) without also keying/reordering carefully, as the index-based DOM lookup assumes a stable 1:1 mapping between `items` and the container's child elements.

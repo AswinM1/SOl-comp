@@ -179,25 +179,3 @@ interface PickerProps {
 | `defaultIndex` | `number` | `0` | Initial selected index, i.e. the starting value of `position`. |
 | `onChange` | `(value: string, index: number) => void` | `undefined` | Fired when `position` changes, useful for syncing the selection to form state. |
 
-## Internal constants (current implementation)
-
-| Constant | Value | Purpose |
-|---|---|---|
-| `items` | `["fight club", "seven", "wolf of wall street", "insidious", "green mile"]` | The wheel's option list. |
-| `ITEM_HEIGHT` | `40` | Pixel height/spacing of each row. |
-| `VISIBLE` | `3` | Number of items rendered on each side of the center. |
-
-## How it works
-
-- **`position`** is a floating selection index (not clamped to `items.length`), which is what allows infinite scrolling in either direction.
-- **`indexes`** builds a small window of `2 * VISIBLE + 1` virtual indexes centered on `position`. Each virtual index is mapped back into the real `items` array with `mod()`, so the same item can render at multiple virtual positions as you scroll past it repeatedly.
-- **`distance`** (`virtualIndex - position`) drives every visual property — vertical offset, scale, opacity, blur, and `rotateX` — so items closer to center look sharper, larger, and more opaque.
-- **`handleWheel`** debounces scroll input with a `wheelLock` ref and a 150ms timeout, moving the selection by exactly one step per gesture regardless of scroll velocity.
-- **Click-to-select** calls `setPosition(virtualIndex)` directly, snapping the clicked item to the center via the spring transition.
-
-## Customization tips
-
-- Change **scroll sensitivity** by adjusting the `150` ms debounce in `handleWheel`, or by using `e.deltaY` magnitude instead of just its sign for variable-speed scrolling.
-- Change **wheel curvature** by tuning the multipliers in `scale`, `opacity`, and `rotateX` — larger multipliers create a tighter, more pronounced curve.
-- Change **spring feel** via the `transition` object's `stiffness` and `damping`.
-- Swap `items: string[]` for `items: { label: string; value: string }[]` if you need decoupled display/value pairs.

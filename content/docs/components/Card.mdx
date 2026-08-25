@@ -180,17 +180,3 @@ interface CardProps {
 | `duration` | `number` | `7` | Seconds for one full loop through the three `clipPath` keyframes. |
 | `size` | `number` | `52` | Card width and height, in Tailwind spacing units (`w-52 h-52` = 13rem / 208px). |
 
-## How it works
-
-- **`clipPath` keyframes** each define a `polygon()` with points that dip and rise across the bottom ~50% of the card, forming a jagged wave line; the bottom two points (`100% 100%` and `0 100%`) anchor the shape to the card's base so the gradient always fills from the wave line downward.
-- Animating between **three different polygons** (rather than two) lets Framer Motion interpolate a smooth, non-repetitive-looking ripple, since the middle keyframe differs enough from both ends to avoid a simple back-and-forth feel.
-- **`repeat: Infinity`** with no `repeatType` defaults to Framer Motion's `"loop"` behavior, replaying the three keyframes in sequence forever.
-- The gradient itself (`bg-gradient-to-t from-red-600 via-orange-400 to-yellow-600`) is static — only the **clip shape** animates, not the colors, which keeps the animation cheap (no repaint of gradient stops, just a changing clip region).
-- The **radial glow** div and the **content** div are separate, non-animated layers stacked via `absolute`/`relative` positioning and `z-10`, so they stay crisp and legible regardless of what the wave is doing underneath.
-
-## Customization tips
-
-- To vary the **wave intensity**, adjust how far apart the y-values (`50%`, `55%`, `65%`, `80%`, etc.) are across keyframes — larger spreads produce a choppier, more dramatic wave.
-- To support **any color scheme**, swap the Tailwind gradient utility classes for an inline `style` gradient driven by props, since Tailwind's JIT can't safely interpolate arbitrary class names at runtime.
-- To make the **wave feel less mechanical**, replace the linear "loop" with `repeatType: "mirror"` so it eases back through the same keyframes instead of snapping to the start.
-- Consider adding `prefers-reduced-motion` handling (e.g. via `useReducedMotion()` from `motion/react`) to freeze the wave for users who've opted out of animation.
