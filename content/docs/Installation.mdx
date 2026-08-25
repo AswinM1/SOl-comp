@@ -1,50 +1,34 @@
 ---
 title: Installation
-description: Welcome to my component library
+description: Install Sol components in your React project
 ---
 
-# Introduction
-SOl components is a part of Shadcn registry so it can be easily setup
+# Installation
 
-```bash
-npm install my-components
-```
+Sol Components is built on top of the [shadcn/ui](https://ui.shadcn.com/) registry format, so you can install components directly into your project using the shadcn CLI.
 
-## Manual Installation
+## Dependencies
 
-If you prefer to set things up yourself, install the required peer dependencies:
+## Requirements
 
-```bash
-npm install tailwindcss motion next
-```
+Sol components use **[Motion](https://motion.dev)** for animations and **[Tailwind CSS](https://tailwindcss.com/)** for styling.
 
-### Tailwind CSS
-
-Make sure Tailwind is configured in your project. If you haven't set it up yet:
-
-```bash
-npx tailwindcss init -p
-```
-
-Then add the component library's files to your `tailwind.config.js` content array:
-
-```js
-module.exports = {
-  content: [
-    "./node_modules/my-components/**/*.{js,ts,jsx,tsx}",
-    // ...your existing paths
-  ],
-}
-```
+Make sure both are configured in your project before installing components.
 
 ### Motion
 
-This library uses [Motion](https://motion.dev) for animations. Install it if it isn't already part of your project:
+Sol uses [Motion](https://motion.dev) for animations.
+
+Install it with:
 
 ```bash
 npm install motion
 ```
 
-### Next.js
+## Quick Start
 
-If you're using Next.js, no additional configuration is required — the components work out of the box with both the App Router and Pages Router.
+Make sure your project has Tailwind CSS configured, then run:
+
+```bash
+npx shadcn@latest add https://sol-components.vercel.app/r/shimmer.json
+```

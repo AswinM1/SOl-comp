@@ -31,6 +31,7 @@ npm install motion
 ```bash
 npx shadcn@latest add https://sol-components.vercel.app/r/picker.json
 ```
+
 Make sure Tailwind CSS is configured in your project, then copy the component below into your codebase, e.g. `components/picker.tsx`.
 
 ## Usage
@@ -182,3 +183,4 @@ interface PickerProps {
 | `defaultIndex` | `number` | `0` | Initial selected index, i.e. the starting value of `position`. |
 | `onChange` | `(value: string, index: number) => void` | `undefined` | Fired when `position` changes, useful for syncing the selection to form state. |
 
+Note:This is inspired from React-Wheel-Picker
