@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "liquid",
+  "title": "Liquid",
+  "description": "Liquid animation component.",
+  "dependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "components/Liquid.tsx",
+      "content": "\"use client\";\r\n\r\nimport { motion } from \"motion/react\";\r\n\r\ninterface LiquidProps {\r\n  text?: string;\r\n  textColor?: string;\r\n  liquidColor?: string;\r\n  fontSize?: string;\r\n  duration?: number;\r\n  repeat?: number;\r\n}\r\n\r\nfunction Liquid({\r\n  text = \"LiQuids\",\r\n  textColor = \"text-amber-400\",\r\n  liquidColor = \"text-blue-800\",\r\n  fontSize = \"text-8xl\",\r\n  duration = 5,\r\n  repeat = Infinity,\r\n}: LiquidProps) {\r\n  return (\r\n    <div className=\"flex w-full justify-center\">\r\n      <div className=\"relative w-fit\">\r\n        {/* Base Text */}\r\n        <motion.div\r\n          className={`\r\n            w-fit\r\n            ${fontSize}\r\n            ${textColor}\r\n            font-sans\r\n            font-bold\r\n            tracking-tight\r\n          `}\r\n        >\r\n          {text}\r\n        </motion.div>\r\n\r\n        {/* Liquid Layer */}\r\n        <motion.div\r\n          animate={{\r\n            clipPath: [\r\n              \"polygon(0 80%, 15% 55%, 30% 65%, 45% 55%, 60% 65%, 75% 55%, 100% 60%, 100% 100%, 0 100%)\",\r\n\r\n              \"polygon(0 80%, 15% 65%, 30% 55%, 45% 65%, 60% 55%, 75% 65%, 100% 55%, 100% 100%, 0 100%)\",\r\n\r\n              \"polygon(0 60%, 15% 55%, 30% 65%, 45% 55%, 60% 65%, 75% 55%, 100% 60%, 100% 100%, 0 100%)\",\r\n            ],\r\n          }}\r\n          transition={{\r\n            duration,\r\n            repeat,\r\n            repeatType: \"loop\",\r\n          }}\r\n          className={`\r\n            absolute\r\n            inset-0\r\n            w-fit\r\n            ${fontSize}\r\n            ${liquidColor}\r\n            font-sans\r\n            font-bold\r\n            tracking-tight\r\n          `}\r\n        >\r\n          {text}\r\n        </motion.div>\r\n      </div>\r\n    </div>\r\n  );\r\n}\r\n\r\nexport default Liquid;",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

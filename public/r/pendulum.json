@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pendulum",
+  "title": "Pendulum",
+  "description": "Pendulum animation component.",
+  "dependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "components/Pendulum.tsx",
+      "content": "\"use client\";\r\n\r\nimport { useEffect, useRef, useState } from \"react\";\r\nimport { motion, useReducedMotion } from \"motion/react\";\r\n\r\ninterface PendulumProps {\r\n  length?: number;\r\n  ballSize?: number;\r\n  sensitivity?: number;\r\n  color?: string;\r\n  ballGradient?: string;\r\n  stiffness?: number;\r\n  damping?: number;\r\n  maxAngle?: number;\r\n}\r\n\r\nfunction Pendulum({\r\n  length = 300,\r\n  ballSize = 48,\r\n  sensitivity = 0.03,\r\n  color = \"bg-red-800\",\r\n  ballGradient = \"bg-linear-to-r from-yellow-500 to-pink-700\",\r\n  stiffness = 100,\r\n  damping = 10,\r\n  maxAngle = 60,\r\n}: PendulumProps) {\r\n  const [angle, setAngle] = useState<number>(0);\r\n  const previousX = useRef<number | null>(null);\r\n  const prefersReducedMotion = useReducedMotion();\r\n\r\n  useEffect(() => {\r\n    // Respect the user's reduced-motion preference by not\r\n    // tracking the cursor at all.\r\n    if (prefersReducedMotion) return;\r\n\r\n    const handleMouseMove = (event: MouseEvent): void => {\r\n      const currentX = event.clientX;\r\n\r\n      // On the very first move we only have a \"current\" position and\r\n      // no prior one to diff against — record it and bail out instead\r\n      // of computing a movement against the ref's 0 default, which\r\n      // used to cause a large jump on mount.\r\n      if (previousX.current === null) {\r\n        previousX.current = currentX;\r\n        return;\r\n      }\r\n\r\n      const movement = previousX.current - currentX;\r\n      previousX.current = currentX;\r\n\r\n      setAngle((previous) => {\r\n        const next = previous + movement * sensitivity;\r\n        // Clamp so the pendulum swings within a believable arc\r\n        // instead of accumulating unbounded rotation over time.\r\n        return Math.max(-maxAngle, Math.min(maxAngle, next));\r\n      });\r\n    };\r\n\r\n    window.addEventListener(\"mousemove\", handleMouseMove);\r\n\r\n    return () => {\r\n      window.removeEventListener(\"mousemove\", handleMouseMove);\r\n    };\r\n  }, [sensitivity, maxAngle, prefersReducedMotion]);\r\n\r\n  return (\r\n    <div className=\"flex justify-center\">\r\n      <motion.div\r\n        className={`relative mt-10 w-[2px] origin-top ${color}`}\r\n        style={{\r\n          height: length,\r\n        }}\r\n        animate={{\r\n          rotate: angle,\r\n        }}\r\n        transition={{\r\n          type: \"spring\",\r\n          stiffness,\r\n          damping,\r\n        }}\r\n      >\r\n        <div\r\n          className={`\r\n            absolute\r\n            bottom-0\r\n            left-1/2\r\n            -translate-x-1/2\r\n            rounded-full\r\n            ${ballGradient}\r\n          `}\r\n          style={{\r\n            width: ballSize,\r\n            height: ballSize,\r\n          }}\r\n        />\r\n      </motion.div>\r\n    </div>\r\n  );\r\n}\r\n\r\nexport default Pendulum;",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

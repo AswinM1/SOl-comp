@@ -1,0 +1,174 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "Sol components",
+  "homepage": "https://sol-components.vercel.app/",
+  "items": [
+    {
+      "name": "action",
+      "type": "registry:ui",
+      "title": "Action",
+       "dependencies": [
+        "motion"
+      ],
+      "description": "Action component.",
+      "files": [
+        {
+          "path": "components/Action.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Interactive button component.",
+       "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/Button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "Animated gradient card.",
+       "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/Card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "cube",
+      "type": "registry:ui",
+      "title": "Cube",
+      "description": "Interactive 3D image cube.",
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/Cube.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "feedback",
+      "type": "registry:ui",
+      "title": "Feedback",
+      "description": "Feedback component.",
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/Feedback.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "id",
+      "type": "registry:ui",
+      "title": "ID",
+      "description": "ID component.",
+       "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/Id.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "liquid",
+      "type": "registry:ui",
+      "title": "Liquid",
+      "description": "Liquid animation component.",
+       "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/Liquid.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "macdock",
+      "type": "registry:ui",
+      "title": "MacDock",
+      "description": "macOS-style dock component.",
+       "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/Macdock.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "pendulum",
+      "type": "registry:ui",
+      "title": "Pendulum",
+      "description": "Pendulum animation component.",
+       "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/Pendulum.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "picker",
+      "type": "registry:ui",
+      "title": "Picker",
+      "description": "Wheel-style picker component.",
+      
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/Picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "shimmer",
+      "type": "registry:ui",
+      "title": "Shimmer",
+      "description": "Letter-by-letter shimmering text animation.",
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/Shimmer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    }
+    
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "card",
+  "title": "Card",
+  "description": "Animated gradient card.",
+  "dependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "components/Card.tsx",
+      "content": "\"use client\"\r\n\r\nimport { motion } from \"motion/react\"\r\n\r\ninterface CardProps {\r\n  /** Small label above the title, e.g. category. */\r\n  label: string\r\n\r\n  /** Main title text. */\r\n  title: string\r\n\r\n  /** Tailwind gradient \"from\" color class. */\r\n  fromColor?: string\r\n\r\n  /** Tailwind gradient \"via\" color class. */\r\n  viaColor?: string\r\n\r\n  /** Tailwind gradient \"to\" color class. */\r\n  toColor?: string\r\n\r\n  /** Full wave animation cycle duration, in seconds. */\r\n  duration?: number\r\n\r\n  /** Card width/height in Tailwind size units. */\r\n  size?: number\r\n}\r\n\r\nfunction Card({\r\n  label,\r\n  title=\"Deserts\",\r\n  fromColor = \"from-red-600\",\r\n  viaColor = \"via-orange-400\",\r\n  toColor = \"to-yellow-600\",\r\n  duration = 7,\r\n  size = 52,\r\n}: CardProps) {\r\n  return (\r\n    <div className=\"mx-auto mt-10 flex items-center justify-center\">\r\n      <div\r\n        style={{\r\n          width: `${size * 0.25}rem`,\r\n          height: `${size * 0.25}rem`,\r\n        }}\r\n        className=\"\r\n          relative\r\n          overflow-hidden\r\n          rounded-[28px]\r\n          border\r\n          border-neutral-400\r\n          bg-neutral-300\r\n          shadow-2xl\r\n        \"\r\n      >\r\n        {/* Animated wave */}\r\n        <motion.div\r\n          animate={{\r\n            clipPath: [\r\n              \"polygon(0 50%, 35% 55%, 30% 65%, 45% 55%, 60% 65%, 75% 55%, 100% 60%, 100% 100%, 0 100%)\",\r\n\r\n              \"polygon(0 80%, 15% 65%, 30% 55%, 45% 65%, 60% 55%, 75% 65%, 100% 55%, 100% 100%, 0 100%)\",\r\n\r\n              \"polygon(0 80%, 15% 55%, 30% 65%, 45% 55%, 60% 65%, 75% 55%, 100% 60%, 100% 100%, 0 100%)\",\r\n            ],\r\n          }}\r\n          transition={{\r\n            duration,\r\n            repeat: Infinity,\r\n          }}\r\n          className={`\r\n            absolute\r\n            inset-0\r\n            bg-linear-to-t\r\n            ${fromColor}\r\n            ${viaColor}\r\n            ${toColor}\r\n          `}\r\n        />\r\n\r\n        {/* Soft glow */}\r\n        <div\r\n          className=\"\r\n            absolute\r\n            inset-0\r\n            bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.4),transparent_45%)]\r\n          \"\r\n        />\r\n\r\n        {/* Content */}\r\n        <div className=\"relative z-10 flex h-full flex-col justify-between p-6\">\r\n          <div>\r\n            <p className=\"text-sm font-medium tracking-tight text-neutral-700\">\r\n              {label}\r\n            </p>\r\n\r\n            <h1 className=\"mt-2 font-serif text-3xl leading-none tracking-tight text-neutral-700\">\r\n              {title}\r\n            </h1>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n\r\nexport default Card",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

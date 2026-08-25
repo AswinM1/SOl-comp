@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "button",
+  "title": "Button",
+  "description": "Interactive button component.",
+  "dependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "components/Button.tsx",
+      "content": "\"use client\"\r\n\r\nimport React from \"react\"\r\n\r\ninterface ButtonProps {\r\n  /** Click handler for the button. */\r\n  onClick?: () => void\r\n\r\n  /** Diameter of the button, in Tailwind size units. Default: 20 (5rem). */\r\n  size?: number\r\n\r\n  /** Background color class for the button face. */\r\n  color?: string\r\n\r\n  /** Disables press interaction and dims the button. */\r\n  disabled?: boolean\r\n\r\n  /** Optional label or icon rendered inside the button. */\r\n  children?: React.ReactNode\r\n}\r\n\r\nfunction Button({\r\n  onClick,\r\n  size = 90,\r\n  color = \"bg-neutral-300\",\r\n  disabled = false,\r\n  children,\r\n}: ButtonProps) {\r\n  return (\r\n    <div className=\"flex h-screen w-full items-center justify-center\">\r\n      <div className=\" h-36 w-36 rounded-md bg-neutral-500 flex justify-center items-center shadow-inner\">\r\n        <button\r\n          onClick={onClick}\r\n          disabled={disabled}\r\n          style={{\r\n            width:size,\r\n            height:size,\r\n          }}\r\n          className={`\r\n           \r\n            \r\n            rounded-full\r\n            ${color}\r\n            shadow-[1px_2px_8px_rgba(0,0,0,0.45),inset_0_2px_0px_rgba(255,255,255,0.8)]\r\n            transition-transform\r\n            active:scale-90\r\n            active:shadow-[inset_0_1px_4px_4px_rgba(0,0,0,0.4)]\r\n            disabled:cursor-not-allowed\r\n            disabled:opacity-50\r\n          `}\r\n        >\r\n          {children}\r\n        </button>\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n\r\nexport default Button",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

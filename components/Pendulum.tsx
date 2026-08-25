@@ -26,12 +26,10 @@ function Pendulum({
 }: PendulumProps) {
   const [angle, setAngle] = useState<number>(0);
   const previousX = useRef<number | null>(null);
-  const prefersReducedMotion = useReducedMotion();
+ 
 
   useEffect(() => {
-    // Respect the user's reduced-motion preference by not
-    // tracking the cursor at all.
-    if (prefersReducedMotion) return;
+   
 
     const handleMouseMove = (event: MouseEvent): void => {
       const currentX = event.clientX;
@@ -61,12 +59,12 @@ function Pendulum({
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [sensitivity, maxAngle, prefersReducedMotion]);
+  }, [sensitivity, maxAngle]);
 
   return (
     <div className="flex justify-center">
       <motion.div
-        className={`relative mt-10 w-[2px] origin-top ${color}`}
+        className={`relative mt-10 w-[3px] origin-top ${color}`}
         style={{
           height: length,
         }}
