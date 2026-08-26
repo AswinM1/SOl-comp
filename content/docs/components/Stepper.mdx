@@ -1,0 +1,150 @@
+---
+title: Animated Stepper
+description: An animated stepper component with min and max values support
+---
+import Stepper from "@/components/Stepper"
+
+# Shimmer
+<div style={{touchAction:"none"}}className="max-w-3xl min-h-[400px]  flex max-h-2xl p-4 justify-center mx-0  items-center bg-neutral-900 rounded-md">
+<Stepper/>
+</div>
+
+Animates a string of text one letter at a time, cycling each character's color through a wave that sweeps across the word — a common "shimmer" / "wave" text effect.
+
+## Features
+
+- **Min/Max value** — Supports min and max value to disable buttons
+- **Staggered effect** — digits become visible one after other giving a cool wave effect
+- **Custom colors** — Supports custom colors for both text and the component
+
+## Installation
+
+This component depends on `motion` (the successor package to `framer-motion`) and Tailwind CSS for styling.
+
+```bash
+npm install motion
+```
+```bash
+npx shadcn@latest add https://sol-components.vercel.app/r/v1/stepper.json
+```
+
+Make sure Tailwind CSS is configured in your project, then copy the component below into your codebase, e.g. `components/shimmer.tsx`.
+
+## Usage
+
+```tsx
+import Shimmer from "@/components/shimmer";
+
+export default function Page() {
+  return <Shimmer />;
+}
+```
+
+## Component
+
+```tsx
+"use client"
+
+import React, { useState } from "react"
+import { motion, AnimatePresence } from "motion/react"
+
+type StepperProps = {
+  min: number
+  max: number
+  color?: string
+  textColor?: string
+}
+
+function Stepper({
+  min,
+  max,
+  color = "bg-neutral-200",
+  textColor = "text-black",
+}: StepperProps) {
+  const [value, setValue] = useState(min)
+
+  return (
+    <div className="flex gap-0.5">
+     
+      <button
+        disabled={value === min}
+        onClick={() =>
+          setValue((prev) => Math.max(prev - 1, min))
+        }
+        className={`
+          flex h-10 w-10 items-center justify-center
+          rounded-l-full font-semibold cursor-pointer
+          ${color}
+            ${textColor}
+          disabled:cursor-not-allowed disabled:opacity-50
+        `}
+      >
+        -
+      </button>
+
+      <div
+        className={`
+          flex h-10 w-20 items-center justify-center
+          overflow-hidden font-semibold
+          bg-neutral-950
+          ${textColor}
+          dark:bg-neutral-200 dark:text-black
+        `}
+      >
+        <AnimatePresence mode="popLayout">
+          {value.toString().split("").map((digit, index) => (
+            <motion.span
+              key={`${index}-${digit}`}
+              initial={{
+                y: 20,
+                opacity: 0,
+              }}
+              animate={{
+                y: 0,
+                opacity: 1,
+              }}
+              exit={{
+                y: -20,
+                opacity: 0,
+              }}
+              transition={{
+                duration: 0.2,
+                delay: index * 0.05,
+              }}
+            >
+              {digit}
+            </motion.span>
+          ))}
+        </AnimatePresence>
+      </div>
+
+     
+      <button
+        disabled={value === max}
+        onClick={() =>
+          setValue((prev) => Math.min(prev + 1, max))
+        }
+        className={`
+          flex h-10 w-10 items-center justify-center
+          rounded-r-full font-semibold cursor-pointer
+          ${color}
+            ${textColor}
+          disabled:cursor-not-allowed disabled:opacity-50
+        `}
+      >
+        +
+      </button>
+    </div>
+  )
+}
+
+export default Stepper
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `min` | `number` | `0` | The minimum number to reach |
+| `max` | `string` | `10` | The maximum number to reach |
+| `color` | `string` | `bg-white` | the component color , uses tailwind classes
+| `textColor` | `string` | `text-black` | The color of text , uses tailwind classes
+

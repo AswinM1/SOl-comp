@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
+import Stepper from "@/components/Stepper";
 
 export default function Home() {
   const command =
