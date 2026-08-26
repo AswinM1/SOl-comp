@@ -14,7 +14,7 @@ function Stepper({
   min=0,
   max=10,
   color = "bg-neutral-200",
-  textColor = "text-black",
+  textColor = "text-neutral-900",
 }: StepperProps) {
   const [value, setValue] = useState(min)
 
@@ -29,6 +29,7 @@ function Stepper({
         className={`
           flex h-10 w-10 items-center justify-center
           rounded-l-full font-semibold cursor-pointer
+            shadow-[inset_0_4px_6px_rgba(0,0,0,0.3)] 
           ${color}
             ${textColor}
           disabled:cursor-not-allowed disabled:opacity-50
@@ -40,10 +41,11 @@ function Stepper({
       <div
         className={`
           flex h-10 w-20 items-center justify-center
-          overflow-hidden font-semibold
+          overflow-hidden font-black
           bg-neutral-950
           ${textColor}
-          dark:bg-neutral-200 dark:text-black
+          shadow-[inset_0_4px_6px_rgba(0,0,0,0.3)] 
+          dark:bg-neutral-200 
         `}
       >
         <AnimatePresence mode="popLayout">
@@ -81,6 +83,7 @@ function Stepper({
         }
         className={`
           flex h-10 w-10 items-center justify-center
+            shadow-[inset_0_4px_6px_rgba(0,0,0,0.3)] 
           rounded-r-full font-semibold cursor-pointer
           ${color}
             ${textColor}
