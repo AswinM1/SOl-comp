@@ -42,12 +42,12 @@ function Feedback({
           initial={{
             width: 95,
             height: 42,
-            borderRadius: 6,
+            borderRadius: 2,
           }}
           animate={{
             width: open ? 420 : 95,
             height: open ? 300 : 42,
-            borderRadius: open ? 18 : 6,
+            borderRadius: open ? 10 : 5,
           }}
           transition={{
             type: "spring",
@@ -58,12 +58,14 @@ function Feedback({
           className="
             overflow-hidden
             border border-neutral-600
-            bg-neutral-900
-            font-sans
+            bg-neutral-200
+            text-gray-900
+
+      
             tracking-tight
           "
         >
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence mode="wait">
             {!open ? (
               <motion.button
                 key="button"
@@ -72,7 +74,9 @@ function Feedback({
                 className="
                   h-full w-full
                   cursor-pointer
-                  text-sm font-medium
+                  text-sm text-gray-500
+                  font-medium border border-gray-400
+                  
                 "
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -97,8 +101,8 @@ function Feedback({
                   scale: 0.92,
                 }}
                 transition={{
-                  duration: 0.25,
-                  delay: 0.08,
+                  duration: 0.1,
+                
                 }}
               >
                 <textarea
@@ -111,8 +115,8 @@ function Feedback({
                   className="
                     min-h-0 flex-1
                     resize-none
-                    rounded-xl
-                    border border-neutral-600
+                    rounded-sm
+                    border border-gray-400
                     bg-neutral-300
                     p-4
                     text-sm text-black
@@ -128,10 +132,12 @@ function Feedback({
                     onClick={handleCancel}
                     className="
                       cursor-pointer
-                      rounded-lg
-                      border border-neutral-600
+                      rounded-sm
+                      border border-red-200
                       px-4 py-2
+                      bg-red-300
                       text-sm
+                      text-red-600
                     "
                   >
                     {cancelText}
@@ -142,10 +148,12 @@ function Feedback({
                     onClick={handleSubmit}
                     className="
                       cursor-pointer
-                      rounded-lg
+                      rounded-sm
                       bg-white
                       px-4 py-2
-                      text-sm text-black
+                      text-sm text-gray-500
+                      font-normal
+                      border-gray-300 border
                     "
                   >
                     {submitText}

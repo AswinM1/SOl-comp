@@ -13,6 +13,8 @@ export default function Layout({
     <DocsLayout
       tree={source.pageTree}
       {...baseOptions()}
+      githubUrl="https://github.com/AswinM1/SOl-comp"
+     
      
     >
       {children}

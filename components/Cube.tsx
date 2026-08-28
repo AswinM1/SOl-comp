@@ -17,11 +17,13 @@ interface CubeProps {
 }
 
 const defaultImages = [
-  "https://images.unsplash.com/photo-1500534623283-312aade485b7",
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-  "https://images.unsplash.com/photo-1518837695005-2083093ee35b",
-  "https://images.unsplash.com/photo-1501854140801-50d01698950b",
-]
+  "https://images.unsplash.com/photo-1519608487953-e999c86e7455?grayscale&w=500&q=80",
+  "https://images.unsplash.com/photo-1500534623283-312aade485b7?grayscale&w=500&q=80",
+  "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?grayscale&w=500&q=80",
+  "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?grayscale&w=500&q=80",
+  "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?grayscale&w=500&q=80",
+  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?grayscale&w=500&q=80",
+];
 
 const OVERLAP = 1
 

@@ -7,16 +7,7 @@ export function baseOptions(): BaseLayoutProps {
       url: "/",
     },
 
-    links: [
-      {
-        text: "Home",
-        url: "/",
-      },
-       {
-        text: "Star on Github",
-        url: "https://github.com/AswinM1/SOl-comp",
-      },
-    ]
+    
     
 
    

@@ -90,10 +90,10 @@ function Action({
             className="
               h-fit w-fit p-3
               cursor-pointer
-              border border-neutral-600
-              bg-black
-              font-sans text-sm font-medium tracking-tight
-              text-neutral-200
+              border border-gray-400
+              bg-neutral-200 
+               text-sm font-medium tracking-tight
+              text-neutral-800
             "
             transition={{ layout: spring }}
           >
@@ -116,16 +116,17 @@ function Action({
               flex w-fit items-center
               overflow-hidden
               border border-neutral-600
-              bg-black
+              bg-neutral-200 
               p-3
-              font-sans tracking-tight
+               tracking-tight
             "
             transition={{ layout: spring }}
           >
-            <AnimatePresence mode="popLayout" initial={false}>
+            <AnimatePresence mode="popLayout" initial={false} >
               {status === "input" && (
                 <motion.div
                   key="input"
+                  
                   layout
                   className="flex items-center gap-3"
                   initial={{
@@ -154,12 +155,13 @@ function Action({
                       h-12 w-64
                       resize-none overflow-hidden
                       rounded-md
-                      border border-neutral-700
-                      bg-neutral-950
-                      p-3
-                      text-neutral-100
+                      border border-gray-400
+                      bg-neutral-300
+                      p-2
+                      text-black
                       placeholder:text-neutral-500
                       outline-none
+                      
                     "
                   />
 
@@ -169,10 +171,11 @@ function Action({
                     className="
                       w-fit cursor-pointer
                       rounded-xl
-                      border border-neutral-700
+                      border border-red-400
                       p-3
                       font-medium
-                      text-neutral-300
+                      text-red-500
+                      bg-red-300
                     "
                   >
                     Cancel
@@ -189,6 +192,8 @@ function Action({
                       p-3
                       font-medium
                       text-black
+                      border-gray-300
+                      border
                       disabled:cursor-not-allowed
                       disabled:opacity-40
                     "
