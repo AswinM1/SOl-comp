@@ -15,6 +15,7 @@ import Pendulum from "@/components/Pendulum";
 import Picker from "@/components/Picker";
 import Shimmer from "@/components/Shimmer";
 import Stepper from "@/components/Stepper";
+import Scrolleffect from "@/components/Scrolleffect";
 
 export default function Home() {
   const components = [
@@ -90,6 +91,12 @@ export default function Home() {
       href: "/docs/components/Stepper",
       component: <Stepper min={0} max={10} />,
     },
+    {
+      name: "Scroll Effect",
+      description: "Animated scroll effect",
+      href: "/docs/components/Scrolleffect",
+      component: <Scrolleffect />,
+    },
   ];
 
   const command =
@@ -100,16 +107,27 @@ export default function Home() {
   const handleCopy = async () => {
     await navigator.clipboard.writeText(command);
     setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 1500);
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20, filter: "blur(12px)" },
-    visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+    hidden: {
+      opacity: 0,
+      y: 20,
+      filter: "blur(12px)",
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+    },
   };
 
   return (
-    <main className="relative flex min-h-screen flex-1 justify-center overflow-hidden bg-neutral-950 px-6 py-20 antialiased">
+    <main className="relative flex min-h-screen w-full justify-center overflow-hidden bg-neutral-950 px-4 py-14 antialiased sm:px-6 sm:py-20">
       {/* Background texture */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.4]"
@@ -121,30 +139,41 @@ export default function Home() {
             "radial-gradient(ellipse 80% 50% at 50% 0%, black 40%, transparent 100%)",
         }}
       />
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-white/[0.04] blur-[120px]" />
+
+      {/* Glow */}
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[300px] w-[500px] -translate-x-1/2 rounded-full bg-white/[0.04] blur-[100px] sm:h-[500px] sm:w-[900px] sm:blur-[120px]" />
 
       <motion.div
         initial="hidden"
         animate="visible"
-        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }}
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: 0.12,
+            },
+          },
+        }}
         className="relative flex w-full max-w-5xl flex-col items-center text-center"
       >
-
-
         {/* Heading */}
         <motion.h1
           variants={itemVariants}
           transition={{ duration: 0.7 }}
-          className="mt-5 text-[52px] font-normal leading-none tracking-[-0.045em] text-white"
+          className="mt-5 text-[40px] font-normal leading-[0.95] tracking-[-0.045em] text-white sm:text-[52px]"
         >
-          S<span className="line-through decoration-1 decoration-neutral-600">o</span>l components
+          S
+          <span className="line-through decoration-1 decoration-neutral-600">
+            o
+          </span>
+          l components
         </motion.h1>
 
         {/* Description */}
         <motion.p
           variants={itemVariants}
           transition={{ duration: 0.7 }}
-          className="mt-5 max-w-xl text-[15px] leading-6 tracking-[-0.01em] text-neutral-400"
+          className="mt-5 max-w-[90%] text-[14px] leading-6 tracking-[-0.01em] text-neutral-400 sm:max-w-xl sm:text-[15px]"
         >
           Beautiful animated components for React. Made with Motion and
           Tailwind. Copy and paste directly into your project.
@@ -154,20 +183,20 @@ export default function Home() {
         <motion.div
           variants={itemVariants}
           transition={{ duration: 0.7 }}
-          className="mt-7 flex gap-3"
+          className="mt-7 flex w-full flex-col gap-3 sm:w-auto sm:flex-row"
         >
           <Link
             href="/docs"
-            className="rounded-md bg-white px-4 py-2 text-sm font-medium text-black transition-all hover:bg-neutral-200 hover:shadow-[0_0_24px_-4px_rgba(255,255,255,0.35)]"
+            className="flex h-10 items-center justify-center rounded-md bg-white px-5 text-sm font-medium text-black transition-all hover:bg-neutral-200 hover:shadow-[0_0_24px_-4px_rgba(255,255,255,0.35)]"
           >
             Explore Docs
           </Link>
 
-          
-           <a href="https://github.com/AswinM1/SOl-comp"
+          <a
+            href="https://github.com/AswinM1/SOl-comp"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md border border-neutral-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:border-neutral-600 hover:bg-neutral-800"
+            className="flex h-10 items-center justify-center rounded-md border border-neutral-700 px-5 text-sm font-medium text-white transition-colors hover:border-neutral-600 hover:bg-neutral-800"
           >
             Star on GitHub
           </a>
@@ -177,12 +206,14 @@ export default function Home() {
         <motion.div
           variants={itemVariants}
           transition={{ duration: 0.7 }}
-          className="mt-10 flex w-fit flex-col gap-3 sm:flex-row"
+          className="mt-10 flex w-full max-w-2xl flex-col gap-3 sm:flex-row"
         >
           {/* Command */}
-          <div className="flex h-[40px] min-w-0 items-center rounded-md border border-neutral-800 bg-neutral-900 px-4 sm:px-5">
-            <code className="min-w-0 flex-1 truncate text-left font-mono text-[14px] font-semibold tracking-[-0.035em] text-neutral-200">
-              <span className="text-white">npx shadcn@latest add</span>{" "}
+          <div className="flex h-10 min-w-0 flex-1 items-center rounded-md border border-neutral-800 bg-neutral-900 px-3 sm:px-4">
+            <code className="min-w-0 flex-1 truncate text-left font-mono text-[11px] font-semibold tracking-[-0.035em] text-neutral-200 sm:text-[13px]">
+              <span className="text-white">
+                npx shadcn@latest add{" "}
+              </span>
               <span className="text-neutral-500">
                 https://sol-components.vercel.app/r/shimmer.json
               </span>
@@ -193,7 +224,7 @@ export default function Home() {
               type="button"
               onClick={handleCopy}
               aria-label={copied ? "Copied" : "Copy command"}
-              className="ml-4 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-800 hover:text-white"
+              className="ml-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-800 hover:text-white sm:ml-4"
             >
               <AnimatePresence mode="wait" initial={false}>
                 {copied ? (
@@ -228,7 +259,13 @@ export default function Home() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <rect width="13" height="13" x="9" y="9" rx="2" ry="2" />
+                    <rect
+                      width="13"
+                      height="13"
+                      x="9"
+                      y="9"
+                      rx="2"
+                    />
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                   </motion.svg>
                 )}
@@ -236,12 +273,12 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Quick Start */}
-          <Link href="/docs">
+          {/* Quick Start Button */}
+          <Link href="/docs" className="w-full sm:w-auto">
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              className="flex h-[40px] items-center justify-center rounded-md bg-white px-4 text-sm font-medium tracking-[-0.02em] text-black transition-colors hover:bg-neutral-400"
+              className="flex h-10 w-full items-center justify-center rounded-md bg-white px-5 text-sm font-medium tracking-[-0.02em] text-black transition-colors hover:bg-neutral-400 sm:w-auto"
             >
               Quick Start
             </motion.div>
@@ -252,36 +289,48 @@ export default function Home() {
         <motion.div
           variants={{
             hidden: {},
-            visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+            visible: {
+              transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.2,
+              },
+            },
           }}
-          className="mt-16 grid grid-cols-1 sm:grid-cols-2  gap-5"
+          className="mt-14 grid w-full grid-cols-1 gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-5"
         >
           {components.map((item) => (
             <motion.div
               key={item.name}
               variants={itemVariants}
               transition={{ duration: 0.6 }}
+              className="w-full"
             >
-              <Link href={item.href} className=" h-full col-span-1 ">
-                <div className="relative h-full  max-w-xl min-w-2 p-5 overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950 text-left transition-all duration-300 hover:border-neutral-600 hover:bg-neutral-900">
+              <Link
+                href={item.href}
+                className="group block h-full w-full"
+              >
+                <div className="relative h-full w-full overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950 text-left transition-all duration-300 hover:border-neutral-600 hover:bg-neutral-900">
                   {/* Preview */}
-                  <div className="flex h-60 items-center justify-center overflow-hidden bg-neutral-900/50 p-6">
-                    {item.component}
+                  <div className="flex h-52 w-full items-center justify-center overflow-hidden bg-neutral-900/50 p-4 sm:h-60 sm:p-6">
+                    <div className="flex max-w-full items-center justify-center">
+                      {item.component}
+                    </div>
                   </div>
 
                   {/* Info */}
                   <div className="border-t border-neutral-800 p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="min-w-0">
                         <h2 className="text-sm font-medium text-white">
                           {item.name}
                         </h2>
+
                         <p className="mt-1 text-xs text-neutral-500">
                           {item.description}
                         </p>
                       </div>
 
-                      <span className="text-lg text-neutral-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white">
+                      <span className="shrink-0 text-lg text-neutral-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white">
                         →
                       </span>
                     </div>
@@ -291,8 +340,7 @@ export default function Home() {
             </motion.div>
           ))}
         </motion.div>
-        </motion.div>
-
+      </motion.div>
     </main>
   );
 }

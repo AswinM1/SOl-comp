@@ -1,0 +1,169 @@
+---
+title: Scroll Effect
+description: A scroll-driven text reveal that fades, blurs, and shifts items into focus as they pass the center of a scroll container, built with Framer Motion.
+---
+import Scrolleffect from "@/components/Scrolleffect"
+
+# Scroll Effect
+
+<div style={{touchAction:"none"}} className="max-w-3xl min-h-[400px] flex max-h-2xl p-4 justify-center mx-0 items-center bg-neutral-900 rounded-md">
+<Scrolleffect/>
+</div>
+
+A vertically scrolling list where each item's opacity, blur, and horizontal offset are driven by its position relative to the center of the scroll container. Items sharpen and settle into place as they approach the center, and soften as they move away — creating a focus-pull effect as the user scrolls.
+
+## Features
+
+- **Per-item scroll tracking** — each item uses its own `useScroll` instance, scoped to a shared scroll container via the `container` option, so every item's progress is measured independently.
+- **Center-relative progress** — the `offset` tuple (`"center end"`, `"center center"`, `"center start"`) maps scroll progress from 0 to 1 as an item travels from below-center to center to above-center.
+- **Opacity, blur, and drift** — `opacity` and `blur` (via `useMotionTemplate`) fade and sharpen items as they near center; a small `x` translation adds a subtle horizontal drift for depth.
+- **Pure CSS-driven motion** — all transforms are derived with `useTransform`, no spring physics or manual event handling required.
+
+## Installation
+
+This component depends on `motion` (the successor package to `framer-motion`) and Tailwind CSS for styling.
+
+```bash
+npm install motion
+```
+
+```bash
+npx shadcn@latest add https://sol-components.vercel.app/r/scrolleffect.json
+```
+
+Make sure Tailwind CSS is configured in your project, then copy the component below into your codebase, e.g. `components/scrolleffect.tsx`.
+
+## Usage
+
+```tsx
+import Scrolleffect from "@/components/scrolleffect";
+
+export default function Page() {
+  return <Scrolleffect />;
+}
+```
+
+## Component
+
+```tsx
+"use client"
+import {
+  motion,
+  useMotionTemplate,
+  useScroll,
+  useTransform,
+} from "motion/react"
+
+import { useRef, type RefObject } from "react"
+
+interface ScrollItemProps {
+  value: string
+  container: RefObject<HTMLDivElement | null>
+}
+
+function ScrollItem({ value, container }: ScrollItemProps) {
+  const itemRef = useRef<HTMLDivElement>(null)
+
+  const { scrollYProgress } = useScroll({
+    target: itemRef,
+    container,
+    offset: ["center end", "center center", "center start"],
+  })
+
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.25, 1],
+    [0.25, 0.5, 1]
+  )
+
+  const blur = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    [6, 0, 6]
+  )
+
+  const x = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    [0, -5, 0]
+  )
+
+  const filter = useMotionTemplate`blur(${blur}px)`
+
+  return (
+    <motion.div
+      ref={itemRef}
+      style={{
+        opacity,
+        filter,
+        x,
+      }}
+      className="text-4xl font-bold text-center"
+    >
+      {value}
+    </motion.div>
+  )
+}
+
+interface ScrolleffectProps {
+  items?: string[]
+  /** Tailwind height class applied to the scroll container, e.g. "h-96" */
+  height?: string
+  /** Tailwind gap class between items, e.g. "gap-24" */
+  gap?: string
+  /** Tailwind vertical padding class for the inner list, e.g. "py-40" */
+  padding?: string
+  className?: string
+}
+
+function Scrolleffect({
+  items = ["hello", "how are you", "what's up", "goodbye"],
+  height = "h-96",
+  gap = "gap-24",
+  padding = "py-40",
+  className = "",
+}: ScrolleffectProps) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  return (
+    <div
+      ref={ref}
+      className={`${height} overflow-y-scroll ${className}`}
+    >
+      <div className={`flex flex-col ${gap} ${padding}`}>
+        {items.map((val, idx) => (
+          <ScrollItem
+            key={idx}
+            value={val}
+            container={ref}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default Scrolleffect
+export type { ScrolleffectProps, ScrollItemProps }
+```
+
+## Props
+
+### `Scrolleffect`
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `items` | `string[]` | `["hello", "how are you", "what's up", "goodbye"]` | The list of strings rendered as scrollable items, each wrapped in its own `ScrollItem`. |
+| `height` | `string` | `"h-96"` | Tailwind height class applied to the outer scroll container. |
+| `gap` | `string` | `"gap-24"` | Tailwind gap class controlling vertical spacing between items. |
+| `padding` | `string` | `"py-40"` | Tailwind vertical padding class on the inner list, giving items room to animate in from off-screen. |
+| `className` | `string` | `""` | Additional classes merged onto the scroll container. |
+
+### `ScrollItem`
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `value` | `string` | *(required)* | The text rendered inside the item. |
+| `container` | `RefObject<HTMLDivElement \| null>` | *(required)* | Ref to the scrollable ancestor passed to `useScroll`'s `container` option. Must be the same ref attached to the scroll container's DOM node. |
+
+Note: `ScrollItem` is an internal building block — most consumers only need `Scrolleffect`, but it's exported so you can compose custom layouts (e.g. a horizontal variant) around the same scroll-tracking logic.
