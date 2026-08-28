@@ -55,7 +55,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
 
       <body className="min-h-full flex flex-col">
-         <RootProvider>
+         <RootProvider  search={{
+            enabled: false// disable search entirely
+          }}>
           {children}
         </RootProvider>
         </body>
