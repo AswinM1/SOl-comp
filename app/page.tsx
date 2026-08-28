@@ -128,20 +128,8 @@ export default function Home() {
 
   return (
     <main className="relative flex min-h-screen w-full justify-center overflow-hidden bg-neutral-950 px-4 py-14 antialiased sm:px-6 sm:py-20">
-      {/* Background texture */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.4]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          maskImage:
-            "radial-gradient(ellipse 80% 50% at 50% 0%, black 40%, transparent 100%)",
-        }}
-      />
-
-      {/* Glow */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[300px] w-[500px] -translate-x-1/2 rounded-full bg-white/[0.04] blur-[100px] sm:h-[500px] sm:w-[900px] sm:blur-[120px]" />
+     
+     
 
       <motion.div
         initial="hidden"
@@ -160,7 +148,7 @@ export default function Home() {
         <motion.h1
           variants={itemVariants}
           transition={{ duration: 0.7 }}
-          className="mt-5 text-[40px] font-normal leading-[0.95] tracking-[-0.045em] text-white sm:text-[52px]"
+          className="mt-5 text-[40px] font-bold leading-[0.95] tracking-[-0.045em] text-white sm:text-[52px]"
         >
           S
           <span className="line-through decoration-1 decoration-neutral-600">
@@ -172,11 +160,12 @@ export default function Home() {
         {/* Description */}
         <motion.p
           variants={itemVariants}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.7 
+            
+          }}
           className="mt-5 max-w-[90%] text-[14px] leading-6 tracking-[-0.01em] text-neutral-400 sm:max-w-xl sm:text-[15px]"
         >
-          Beautiful animated components for React. Made with Motion and
-          Tailwind. Copy and paste directly into your project.
+SOl components is a free, open-source collection of animated React components. Copy paste directly or install any component with the shadcn CLI.
         </motion.p>
 
         {/* Buttons */}
@@ -187,18 +176,18 @@ export default function Home() {
         >
           <Link
             href="/docs"
-            className="flex h-10 items-center justify-center rounded-md bg-white px-5 text-sm font-medium text-black transition-all hover:bg-neutral-200 hover:shadow-[0_0_24px_-4px_rgba(255,255,255,0.35)]"
+            className="flex h-10 bg-yellow-300 items-center tracking-tight font-mono justify-center  px-5 text-sm font-medium text-black transition-all hover:bg-yellow-200 ]"
           >
-            Explore Docs
+            EXPLORE DOCS
           </Link>
 
           <a
             href="https://github.com/AswinM1/SOl-comp"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-10 items-center justify-center rounded-md border border-neutral-700 px-5 text-sm font-medium text-white transition-colors hover:border-neutral-600 hover:bg-neutral-800"
+            className="flex h-10  font-mono items-center justify-center  border border-neutral-700 px-5 text-sm font-medium text-white transition-colors  hover:bg-neutral-800"
           >
-            Star on GitHub
+            STAR ON GITHUB
           </a>
         </motion.div>
 
@@ -273,14 +262,12 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Quick Start Button */}
           <Link href="/docs" className="w-full sm:w-auto">
             <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              className="flex h-10 w-full items-center justify-center rounded-md bg-white px-5 text-sm font-medium tracking-[-0.02em] text-black transition-colors hover:bg-neutral-400 sm:w-auto"
+            
+              className="flex h-10 w-full text-sm bg-yellow-300 items-center font-mono justify-center    px-5 font-medium tracking-[-0.02em] text-black transition-colors hover:bg-yellow-200 sm:w-auto"
             >
-              Quick Start
+          QUICK START
             </motion.div>
           </Link>
         </motion.div>
@@ -309,7 +296,7 @@ export default function Home() {
                 href={item.href}
                 className="group block h-full w-full"
               >
-                <div className="relative h-full w-full overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950 text-left transition-all duration-300 hover:border-neutral-600 hover:bg-neutral-900">
+                <div className="relative h-full w-full overflow-hidden  border border-neutral-800 bg-black text-left transition-all duration-300 hover:border-neutral-600 hover:bg-neutral-900">
                   {/* Preview */}
                   <div className="flex h-52 w-full items-center justify-center overflow-hidden bg-neutral-900/50 p-4 sm:h-60 sm:p-6">
                     <div className="flex max-w-full items-center justify-center">

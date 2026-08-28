@@ -31,7 +31,7 @@ function ScrollItem({ value, container }: ScrollItemProps) {
   const blur = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    [6, 0, 6]
+    [1, 0, 1]
   )
 
   const x = useTransform(
@@ -50,7 +50,7 @@ function ScrollItem({ value, container }: ScrollItemProps) {
         filter,
         x,
       }}
-      className="text-4xl font-bold text-center"
+      className="text-xl  font-bold text-center"
     >
       {value}
     </motion.div>
@@ -70,9 +70,9 @@ interface ScrolleffectProps {
 
 function Scrolleffect({
   items = ["hello", "how are you", "what's up", "goodbye"],
-  height = "h-96",
+  height = "h-40 ",
   gap = "gap-24",
-  padding = "py-40",
+  padding = "py-70",
   className = "",
 }: ScrolleffectProps) {
   const ref = useRef<HTMLDivElement>(null)
@@ -80,9 +80,9 @@ function Scrolleffect({
   return (
     <div
       ref={ref}
-      className={`${height} overflow-y-scroll ${className}`}
+      className={`${height} scrollbar-thumb-amber-50 overflow-y-scroll ${className} `}
     >
-      <div className={`flex flex-col ${gap} ${padding}`}>
+      <div className={`flex flex-col ${gap} ${padding} `}>
         {items.map((val, idx) => (
           <ScrollItem
             key={idx}
