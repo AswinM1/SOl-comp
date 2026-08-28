@@ -104,6 +104,7 @@ export default function Home() {
 
   const [copied, setCopied] = useState(false);
 
+
   const handleCopy = async () => {
     await navigator.clipboard.writeText(command);
     setCopied(true);
@@ -126,10 +127,12 @@ export default function Home() {
     },
   };
 
+
   return (
     <main className="relative flex min-h-screen w-full justify-center overflow-hidden bg-neutral-950 px-4 py-14 antialiased sm:px-6 sm:py-20">
+    
      
-     
+
 
       <motion.div
         initial="hidden"
@@ -160,12 +163,12 @@ export default function Home() {
         {/* Description */}
         <motion.p
           variants={itemVariants}
-          transition={{ duration: 0.7 
-            
-          }}
+          transition={{ duration: 0.7 }}
           className="mt-5 max-w-[90%] text-[14px] leading-6 tracking-[-0.01em] text-neutral-400 sm:max-w-xl sm:text-[15px]"
         >
-SOl components is a free, open-source collection of animated React components. Copy paste directly or install any component with the shadcn CLI.
+          SOl components is a free, open-source collection of animated React
+          components. Copy paste directly or install any component with the
+          shadcn CLI.
         </motion.p>
 
         {/* Buttons */}
@@ -176,7 +179,7 @@ SOl components is a free, open-source collection of animated React components. C
         >
           <Link
             href="/docs"
-            className="flex h-10 bg-yellow-300 items-center tracking-tight font-mono justify-center  px-5 text-sm font-medium text-black transition-all hover:bg-yellow-200 ]"
+            className="flex h-10 items-center justify-center bg-yellow-300 px-5 font-mono text-sm font-medium tracking-tight text-black transition-all hover:bg-yellow-200"
           >
             EXPLORE DOCS
           </Link>
@@ -185,7 +188,7 @@ SOl components is a free, open-source collection of animated React components. C
             href="https://github.com/AswinM1/SOl-comp"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-10  font-mono items-center justify-center  border border-neutral-700 px-5 text-sm font-medium text-white transition-colors  hover:bg-neutral-800"
+            className="flex h-10 items-center justify-center border border-neutral-700 px-5 font-mono text-sm font-medium text-white transition-colors hover:bg-neutral-800"
           >
             STAR ON GITHUB
           </a>
@@ -203,6 +206,7 @@ SOl components is a free, open-source collection of animated React components. C
               <span className="text-white">
                 npx shadcn@latest add{" "}
               </span>
+
               <span className="text-neutral-500">
                 https://sol-components.vercel.app/r/shimmer.json
               </span>
@@ -262,12 +266,14 @@ SOl components is a free, open-source collection of animated React components. C
             </button>
           </div>
 
+          {/* Quick Start */}
           <Link href="/docs" className="w-full sm:w-auto">
             <motion.div
-            
-              className="flex h-10 w-full text-sm bg-yellow-300 items-center font-mono justify-center    px-5 font-medium tracking-[-0.02em] text-black transition-colors hover:bg-yellow-200 sm:w-auto"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              className="flex h-10 w-full items-center justify-center bg-yellow-300 px-5 font-mono text-sm font-medium tracking-[-0.02em] text-black transition-colors hover:bg-yellow-200 sm:w-auto"
             >
-          QUICK START
+              QUICK START
             </motion.div>
           </Link>
         </motion.div>
@@ -283,50 +289,93 @@ SOl components is a free, open-source collection of animated React components. C
               },
             },
           }}
-          className="mt-14 grid w-full grid-cols-1 gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-5"
+          className="mt-14 grid w-full  relative grid-cols-1 gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-5"
         >
-          {components.map((item) => (
-            <motion.div
-              key={item.name}
-              variants={itemVariants}
-              transition={{ duration: 0.6 }}
-              className="w-full"
-            >
-              <Link
-                href={item.href}
-                className="group block h-full w-full"
+          <AnimatePresence initial={false}>
+            {components.map((item) => (
+              <motion.div
+                key={item.name}
+                layout
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                exit={{
+                  opacity: 0,
+                  y: 20,
+                  filter: "blur(12px)",
+                }}
+                transition={{
+                  duration: 0.5,
+                }}
+                className="w-full"
               >
-                <div className="relative h-full w-full overflow-hidden  border border-neutral-800 bg-black text-left transition-all duration-300 hover:border-neutral-600 hover:bg-neutral-900">
-                  {/* Preview */}
-                  <div className="flex h-52 w-full items-center justify-center overflow-hidden bg-neutral-900/50 p-4 sm:h-60 sm:p-6">
-                    <div className="flex max-w-full items-center justify-center">
-                      {item.component}
-                    </div>
-                  </div>
-
-                  {/* Info */}
-                  <div className="border-t border-neutral-800 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="min-w-0">
-                        <h2 className="text-sm font-medium text-white">
-                          {item.name}
-                        </h2>
-
-                        <p className="mt-1 text-xs text-neutral-500">
-                          {item.description}
-                        </p>
+                <Link
+                  href={item.href}
+                  className="group block h-full w-full"
+                >
+                  <div className="relative h-full w-full overflow-hidden border border-neutral-800 bg-black text-left transition-all duration-300 hover:border-neutral-600 hover:bg-neutral-900">
+                    {/* Preview */}
+                    <div className="flex h-52 w-full items-center justify-center overflow-hidden bg-neutral-900/50 p-4 sm:h-60 sm:p-6">
+                      <div className="flex max-w-full items-center justify-center">
+                        {item.component}
                       </div>
+                    </div>
 
-                      <span className="shrink-0 text-lg text-neutral-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white">
-                        →
-                      </span>
+                    {/* Info */}
+                    <div className="border-t border-neutral-800 p-4">
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="min-w-0">
+                          <h2 className="text-sm font-medium text-white">
+                            {item.name}
+                          </h2>
+
+                          <p className="mt-1 text-xs text-neutral-500">
+                            {item.description}
+                          </p>
+                        </div>
+
+                        <span className="shrink-0 text-lg text-neutral-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white">
+                          →
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                </Link>
+                
+              </motion.div>
+            ))}
+          </AnimatePresence>
+           <div
+        className="
+          pointer-events-none
+          absolute
+          bottom-0
+          left-0
+          z-10
+          h-32
+          w-full
+          bg-linear-to-t
+          from-neutral-950
+          via-neutral-950/80
+          to-transparent
+          backdrop-blur-[2px]
+        "
+      />
         </motion.div>
+
+        
+          <Link href={"/docs"}>
+          <motion.button
+            type="button"
+      
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            className="mt-8  cursor-pointer border border-neutral-700 bg-neutral-950 px-6 py-2.5 font-mono text-sm font-medium text-white transition-colors hover:border-neutral-500 hover:bg-neutral-900"
+          >
+          VIEW MORE
+          </motion.button>
+          </Link>
+      
       </motion.div>
     </main>
   );
