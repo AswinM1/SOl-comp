@@ -37,12 +37,7 @@ export default function Home() {
       href: "/docs/components/Code",
       component: <Action />,
     },
-    {
-      name: "Cube",
-      description: "Interactive 3D cube",
-      href: "/docs/components/Cube",
-      component: <Cube />,
-    },
+   
     {
       name: "Feedback",
       description: "Interactive feedback component",
@@ -55,29 +50,12 @@ export default function Home() {
       href: "/docs/components/IDcard",
       component: <IDcard />,
     },
-    {
-      name: "Liquid",
-      description: "Fluid liquid animation",
-      href: "/docs/components/Liquid",
-      component: <Liquid />,
-    },
+   
     {
       name: "Mac Dock",
       description: "Animated macOS-style dock",
       href: "/docs/components/MacDock",
       component: <MacDock />,
-    },
-    {
-      name: "Pendulum",
-      description: "Interactive pendulum animation",
-      href: "/docs/components/Pendulum",
-      component: <Pendulum />,
-    },
-    {
-      name: "Picker",
-      description: "3D wheel picker",
-      href: "/docs/components/Picker",
-      component: <Picker />,
     },
     {
       name: "Shimmer",
@@ -91,12 +69,7 @@ export default function Home() {
       href: "/docs/components/Stepper",
       component: <Stepper min={0} max={10} />,
     },
-    {
-      name: "Scroll Effect",
-      description: "Animated scroll effect",
-      href: "/docs/components/Scrolleffect",
-      component: <Scrolleffect />,
-    },
+    
   ];
 
   const command =
