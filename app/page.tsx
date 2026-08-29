@@ -175,7 +175,7 @@ export default function Home() {
         >
           {/* Command */}
           <div className="flex h-10 min-w-0 flex-1 items-center rounded-md border border-neutral-800 bg-neutral-900 px-3 sm:px-4">
-            <code className="min-w-0 flex-1 truncate text-left font-mono text-[11px] font-semibold tracking-[-0.035em] text-neutral-200 sm:text-[13px]">
+            <code className="min-w-0 flex-1 truncate text-left text-[11px] font-semibold tracking-[-0.035em] text-neutral-200 sm:text-[13px]">
               <span className="text-white">
                 npx shadcn@latest add{" "}
               </span>
