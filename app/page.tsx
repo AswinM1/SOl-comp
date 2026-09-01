@@ -25,12 +25,7 @@ export default function Home() {
       href: "/docs/components/Button",
       component: <Button />,
     },
-    {
-      name: "Card",
-      description: "Animated card component",
-      href: "/docs/components/Card",
-      component: <Liquid />,
-    },
+    
     {
       name: "Code",
       description: "Animated code block",
@@ -281,17 +276,17 @@ export default function Home() {
                   href={item.href}
                   className="group block h-full w-full"
                 >
-                  <div className="relative h-full w-full overflow-hidden border border-neutral-800 bg-black text-left transition-all duration-300 hover:border-neutral-600 hover:bg-neutral-900">
+                  <div className="relative h-full w-full overflow-hidden border rounded-md text-left transition-all duration-300 hover:border-neutral-600 hover:bg-neutral-900">
                     {/* Preview */}
-                    <div className="flex h-52 w-full items-center justify-center overflow-hidden bg-neutral-900/50 p-4 sm:h-60 sm:p-6">
+                    <div className="flex h-52 w-full items-center justify-center overflow-hidden p-4 sm:h-60 sm:p-6">
                       <div className="flex max-w-full items-center justify-center">
                         {item.component}
                       </div>
                     </div>
 
                     {/* Info */}
-                    <div className="border-t border-neutral-800 p-4">
-                      <div className="flex items-center justify-between gap-4">
+                    <div className=" p-4">
+                      <div className="flex items-center border-t-2 py-4 justify-between gap-4">
                         <div className="min-w-0">
                           <h2 className="text-sm font-medium text-white">
                             {item.name}
