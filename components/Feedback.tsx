@@ -68,6 +68,7 @@ function Feedback({
           <AnimatePresence mode="wait">
             {!open ? (
               <motion.button
+              layout="position"
                 key="button"
                 type="button"
                 onClick={() => setOpen(true)}
@@ -88,6 +89,7 @@ function Feedback({
               </motion.button>
             ) : (
               <motion.div
+                layout="position"
                 key="form"
                 className="flex h-full w-full flex-col p-4"
                 initial={{
@@ -108,7 +110,8 @@ function Feedback({
                 }}
               >
                 <textarea
-                  autoFocus
+                  
+                  
                   value={feedback}
                   onChange={(event) =>
                     setFeedback(event.target.value)
