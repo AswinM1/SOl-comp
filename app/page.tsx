@@ -108,7 +108,7 @@ export default function Home() {
             },
           },
         }}
-        className="relative flex w-full max-w-5xl flex-col items-center text-center"
+        className="relative flex w-full max-w-5xl flex-col items-start"
       >
         {/* Heading */}
         <motion.h1
