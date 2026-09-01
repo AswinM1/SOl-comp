@@ -152,18 +152,18 @@ export default function Home() {
         >
           <Link
             href="/docs"
-            className="flex h-10 items-center justify-center bg-yellow-300 px-5 font-mono text-sm font-medium tracking-tight text-black transition-all hover:bg-yellow-200"
+            className="flex h-10 items-center  justify-center bg-yellow-300 px-5 text-shadow-2xs rounded-md  text-sm font-medium tracking-tight text-black transition-all hover:bg-yellow-200"
           >
-            EXPLORE DOCS
+            Explore docs
           </Link>
 
           <a
             href="https://github.com/AswinM1/SOl-comp"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-10 items-center justify-center border border-neutral-700 px-5 font-mono text-sm font-medium text-white transition-colors hover:bg-neutral-800"
+            className="flex h-10 items-center justify-center border border-neutral-700 px-5 rounded-md bg-neutral-800 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
           >
-            STAR ON GITHUB
+            Star on github
           </a>
         </motion.div>
 
@@ -244,9 +244,9 @@ export default function Home() {
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              className="flex h-10 w-full items-center justify-center bg-yellow-300 px-5 font-mono text-sm font-medium tracking-[-0.02em] text-black transition-colors hover:bg-yellow-200 sm:w-auto"
+              className="flex h-10 w-full items-center justify-center bg-yellow-300 px-5  text-shadow-2xs rounded-md text-sm font-medium tracking-[-0.02em] text-black transition-colors hover:bg-yellow-200 sm:w-auto"
             >
-              QUICK START
+              Quick start
             </motion.div>
           </Link>
         </motion.div>
@@ -343,13 +343,14 @@ export default function Home() {
       
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
-            className="mt-8  cursor-pointer border border-neutral-700 bg-neutral-950 px-6 py-2.5 font-mono text-sm font-medium text-white transition-colors hover:border-neutral-500 hover:bg-neutral-900"
+            className="mt-8  cursor-pointer  rounded-sm border border-neutral-700 bg-neutral-800 px-6 py-2.5  text-sm font-medium text-white transition-colors hover:border-neutral-500 hover:bg-neutral-900"
           >
-          VIEW MORE
+          view more
           </motion.button>
           </Link>
       
       </motion.div>
+      
     </main>
   );
 }
