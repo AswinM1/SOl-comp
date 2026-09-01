@@ -57,12 +57,7 @@ export default function Home() {
       href: "/docs/components/MacDock",
       component: <MacDock />,
     },
-    {
-      name: "Shimmer",
-      description: "Animated shimmering text",
-      href: "/docs/components/Shimmer",
-      component: <Shimmer />,
-    },
+  
     {
       name: "Stepper",
       description: "Animated number stepper",
@@ -102,7 +97,7 @@ export default function Home() {
 
 
   return (
-    <main className="relative flex min-h-screen w-full justify-center overflow-hidden bg-neutral-950 px-4 py-14 antialiased sm:px-6 sm:py-20">
+    <main className="relative flex min-h-screen w-full justify-center overflow-hidden bg-black px-4 py-14 antialiased sm:px-6 sm:py-20">
     
      
 

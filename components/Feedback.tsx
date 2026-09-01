@@ -74,7 +74,9 @@ function Feedback({
                 className="
                   h-full w-full
                   cursor-pointer
-                  text-sm text-gray-500
+                  text-sm text-neutral-700
+                  bg-white
+                  text-shadow-2xs
                   font-medium border border-gray-400
                   
                 "
@@ -138,6 +140,7 @@ function Feedback({
                       bg-red-300
                       text-sm
                       text-red-600
+                      font-medium
                     "
                   >
                     {cancelText}
@@ -152,7 +155,8 @@ function Feedback({
                       bg-white
                       px-4 py-2
                       text-sm text-gray-500
-                      font-normal
+                      font-medium
+                      text-shadow-2xs
                       border-gray-300 border
                     "
                   >
