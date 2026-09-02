@@ -1,0 +1,39 @@
+---
+title: Text scramble effect
+description: A text scramble effect that animates the transition between two strings by randomly scrambling the characters in between.
+---
+
+import Scrammble from "@/components/Scrammble"
+
+# Text scramble
+
+<div className="max-w-3xl flex max-h-2xl min-h-2xl p-2 justify-center mx-0 self-center items-center bg-neutral-900 rounded-md">
+<Scrammble/>
+
+</div>
+
+
+## Installation
+```bash
+npx shadcn@latest add https://sol-components.vercel.app/r/scramble.json
+```
+
+## Usage
+
+```tsx
+import Scramble from "@/components/Scramble";
+
+export default function Page() {
+  return <Scramble/>;
+}
+```
+
+
+
+## Props
+
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `className` | `string` | `undefined` | Extra classes |
+| `Text` | `string` | `undefined` | Custom text |

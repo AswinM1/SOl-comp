@@ -1,0 +1,37 @@
+---
+title: Star on github Button
+description: A animated star on github button
+---
+
+import Github from "@/components/Github"
+
+# Star on github
+
+<div className="max-w-3xl flex max-h-xl p-2 justify-center mx-0 self-center items-center bg-neutral-900 rounded-md">
+<Github/>
+</div>
+
+## Installation
+```bash
+npx shadcn@latest add https://sol-components.vercel.app/r/github.json
+```
+
+## Usage
+
+```tsx
+import Button from "@/components/Github";
+
+export default function Page() {
+  return <Github/>;
+}
+```
+
+
+
+## Props
+
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `className` | `string` | `undefined` | Extra classes |
+| `onClick` | `undefined` | `undefined` | custom handler|
