@@ -192,11 +192,11 @@ export default function Home() {
             rel="noopener noreferrer"
             className="flex h-10 items-center px-3 justify-center rounded-md  border-neutral-700 bg-neutral-800 px-2 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
           >
-            <span className="flex items-center justify-center mr-2">
+            <span className="flex items-center justify-between gap-2">
               <FaGithub size={18} />
+            Star on github{" "}<span className="bg-neutral-500 rounded-full flex justify-center items-center mx-0 text-center w-5 h-5 px-1 py-1">{stars}</span>
             </span>
 
-            Star on github
           </a>
         </motion.div>
 
